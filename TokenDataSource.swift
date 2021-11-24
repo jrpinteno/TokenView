@@ -72,23 +72,64 @@ extension TokenDataSource: UICollectionViewDataSource {
 			case let tokenCell as TokenCollectionViewCell:
 				let token = tokens[indexPath.item]
 				tokenCell.configure(with: token)
+
 				tokenCell.willBeRemoved = { [weak self] in
 					guard let self = self else { return }
 
 					if let removedIndexPath = self.indexPathFor(token: token) {
 						self.removeToken(at: removedIndexPath)
-						collectionView.deleteItems(at: [removedIndexPath])
+
+						UIView.performWithoutAnimation {
+							collectionView.deleteItems(at: [removedIndexPath])
+						}
+
+						// TODO: Considerations. When deleting token, should it go to the following tag, textfield or do nothing?
+						// Currently we make textfield first responder
+						if let textFieldCell = collectionView.cellForItem(at: IndexPath(item: self.tokens.count, section: 0)) as? TextFieldCollectionViewCell {
+
+							_ = textFieldCell.becomeFirstResponder()
+						}
+					}
+				}
+
+				tokenCell.willReplaceText = { [weak self] text in
+					guard let self = self else { return }
+
+					if let removedIndexPath = self.indexPathFor(token: token) {
+						self.removeToken(at: removedIndexPath)
+
+						UIView.performWithoutAnimation {
+							collectionView.deleteItems(at: [removedIndexPath])
+						}
+
+						if let textFieldCell = collectionView.cellForItem(at: IndexPath(item: self.tokens.count, section: 0)) as? TextFieldCollectionViewCell {
+
+							_ = textFieldCell.becomeFirstResponder()
+							textFieldCell.text = text
+						}
 					}
 				}
 
 			case let textFieldCell as TextFieldCollectionViewCell:
-				textFieldCell.onTextReturn = { [self] text in
-					append(token: text)
+				textFieldCell.onTextReturn = { [weak self] text in
+					guard let self = self else { return }
 
-					let newIndexPath = IndexPath(item: tokens.count - 1, section: 0)
+					self.append(token: text)
+
+					let newIndexPath = IndexPath(item: self.tokens.count - 1, section: 0)
 
 					UIView.performWithoutAnimation {
 						collectionView.insertItems(at: [newIndexPath])
+					}
+				}
+
+				textFieldCell.onEmptyDelete = { [weak self] in
+					guard let self = self else { return }
+
+					if !self.tokens.isEmpty {
+						let lastTokenIndexPath = IndexPath(item: self.tokens.count - 1, section: 0)
+						let cell = collectionView.cellForItem(at: lastTokenIndexPath)
+						_ = cell?.becomeFirstResponder()
 					}
 				}
 

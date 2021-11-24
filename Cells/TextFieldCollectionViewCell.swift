@@ -8,7 +8,27 @@
 import UIKit
 
 class TextFieldCollectionViewCell: UICollectionViewCell {
+	// MARK: Properties
+
+	/// Closure called when inner textfield returns
 	var onTextReturn: ((_ text: String) -> Void)?
+
+	/// Closure called when textfield is trying to backwards delete and is empty
+	var onEmptyDelete: (() -> Void)?
+
+	/// Helper to get/set text in the `UITextField`
+	var text: String? {
+		get {
+			return textField.text
+		}
+
+		set {
+			textField.text = newValue
+		}
+	}
+
+
+	// MARK: -
 
 	override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -28,9 +48,13 @@ class TextFieldCollectionViewCell: UICollectionViewCell {
 		textField.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
 		textField.delegate = self
 
-		textField.onEmptyDelete = {
-			print("On empty")
+		textField.onEmptyDelete = { [weak self] in
+			self?.onEmptyDelete?()
 		}
+	}
+
+	override func becomeFirstResponder() -> Bool {
+		return textField.becomeFirstResponder()
 	}
 
 
