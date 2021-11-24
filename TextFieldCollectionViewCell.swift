@@ -27,13 +27,17 @@ class TextFieldCollectionViewCell: UICollectionViewCell {
 		textField.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
 		textField.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
 		textField.delegate = self
+
+		textField.onEmptyDelete = {
+			print("On empty")
+		}
 	}
 
 
 	// MARK: Lazy views
 
-	private lazy var textField: UITextField = {
-		let field = UITextField()
+	private lazy var textField: EmptyAwareTextField = {
+		let field = EmptyAwareTextField()
 		field.translatesAutoresizingMaskIntoConstraints = false
 		field.autocorrectionType = .no
 		field.autocapitalizationType = .none
