@@ -21,10 +21,12 @@ class TokenCollectionView: UICollectionView {
 	}
 
 	private func setupView() {
+		layer.borderColor = UIColor.black.cgColor
+
 		register(TextFieldCollectionViewCell.self, forCellWithReuseIdentifier: "TextFieldCollectionViewCell")
 		register(TokenCollectionViewCell.self, forCellWithReuseIdentifier: "TokenCollectionViewCell")
 		register(PromptCollectionViewCell.self, forCellWithReuseIdentifier: "PromptCollectionViewCell")
-
-		layer.borderColor = UIColor.black.cgColor
 	}
 }
+
+
