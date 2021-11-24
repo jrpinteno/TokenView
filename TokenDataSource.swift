@@ -9,8 +9,7 @@ import UIKit
 
 class TokenDataSource: NSObject {
 	private var tokens: [String] = ["Europa", "s’ha", "convertit", "novament", "en", "l’epicentre", "mundial",
-											  "de", "la", "pandèmia", "de", "la", "covid"]
-
+											  "de", "la", "pandèmia", "covid"]
 
 	// MARK: Token operations
 
@@ -19,6 +18,27 @@ class TokenDataSource: NSObject {
 	/// - Parameter token: Token to be appended
 	func append(token: String) {
 		tokens.append(token)
+	}
+
+	/// Finds `IndexPath` for a given token
+	///
+	/// - Parameter token: Token
+	/// - Returns: `IndexPath` for the first appearance of the given token
+	func indexPathFor(token: String) -> IndexPath? {
+		for i in 0 ..< tokens.count {
+			if token == tokens[i] {
+				return IndexPath(item: i, section: 0)
+			}
+		}
+
+		return nil
+	}
+
+	/// Removes the token at the given `IndexPath`
+	///
+	/// - Parameter indexPath: Position of the token to be removed
+	func removeToken(at indexPath: IndexPath) {
+		tokens.remove(at: indexPath.item)
 	}
 
 	/// Identifier of reusable cell to be used at a given `IndexPath`
@@ -50,7 +70,16 @@ extension TokenDataSource: UICollectionViewDataSource {
 
 		switch cell {
 			case let tokenCell as TokenCollectionViewCell:
-				tokenCell.configure(with: tokens[indexPath.item])
+				let token = tokens[indexPath.item]
+				tokenCell.configure(with: token)
+				tokenCell.willBeRemoved = { [weak self] in
+					guard let self = self else { return }
+
+					if let removedIndexPath = self.indexPathFor(token: token) {
+						self.removeToken(at: removedIndexPath)
+						collectionView.deleteItems(at: [removedIndexPath])
+					}
+				}
 
 			case let textFieldCell as TextFieldCollectionViewCell:
 				textFieldCell.onTextReturn = { [self] text in

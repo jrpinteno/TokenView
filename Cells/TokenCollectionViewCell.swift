@@ -8,6 +8,10 @@
 import UIKit
 
 class TokenCollectionViewCell: UICollectionViewCell {
+	// MARK: Properties
+	var willBeRemoved: (() -> Void)?
+	var willReplaceText: ((_ text: String) -> Void)?
+
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 
@@ -73,4 +77,19 @@ class TokenCollectionViewCell: UICollectionViewCell {
 
 		return label
 	}()
+}
+
+
+extension TokenCollectionViewCell: UIKeyInput {
+	var hasText: Bool {
+		return false
+	}
+
+	func insertText(_ text: String) {
+		willReplaceText?(text)
+	}
+
+	func deleteBackward() {
+		willBeRemoved?()
+	}
 }
