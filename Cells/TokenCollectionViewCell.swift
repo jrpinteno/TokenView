@@ -23,6 +23,9 @@ class TokenCollectionViewCell: UICollectionViewCell {
 	}
 
 	private func setupView() {
+		backgroundColor = .lightGray
+		tokenLabel.textColor = .white
+
 		addSubview(tokenLabel)
 		tokenLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
 		tokenLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -30,12 +33,43 @@ class TokenCollectionViewCell: UICollectionViewCell {
 		tokenLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
 	}
 
+
+	// MARK: Overrides
+
+	/// By default it is set to false, so we need to override in order to
+	/// handle selection and configuration in becoming/resigning first responder
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+
+	override var isSelected: Bool {
+		didSet {
+			backgroundColor = isSelected ? .blue : .lightGray
+		}
+	}
+
+	override func becomeFirstResponder() -> Bool {
+		super.becomeFirstResponder()
+
+		isSelected = true
+
+		return true
+	}
+
+	override func resignFirstResponder() -> Bool {
+		super.resignFirstResponder()
+
+		isSelected = false
+
+		return true
+	}
+
+
 	// MARK: Lazy views
 
 	private lazy var tokenLabel: UILabel = {
 		let label = UILabel(frame: .zero)
 		label.translatesAutoresizingMaskIntoConstraints = false
-		label.backgroundColor = .lightGray
 
 		return label
 	}()
