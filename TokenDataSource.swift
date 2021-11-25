@@ -8,8 +8,8 @@
 import UIKit
 
 class TokenDataSource: NSObject {
-	private var tokens: [String] = ["Europa", "s’ha", "convertit", "novament", "en", "l’epicentre", "mundial",
-											  "de", "la", "pandèmia", "covid"]
+	/// Array
+	private var tokens: [String] = []
 
 	// MARK: Token operations
 

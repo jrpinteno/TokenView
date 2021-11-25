@@ -28,5 +28,3 @@ class TokenCollectionView: UICollectionView {
 		register(PromptCollectionViewCell.self, forCellWithReuseIdentifier: "PromptCollectionViewCell")
 	}
 }
-
-

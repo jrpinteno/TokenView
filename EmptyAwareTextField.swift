@@ -16,6 +16,7 @@ class EmptyAwareTextField: UITextField {
 	override func deleteBackward() {
 		super.deleteBackward()
 
+		// FIX: mmmm should check
 		if let text = text, text.isEmpty {
 			onEmptyDelete?()
 		}
