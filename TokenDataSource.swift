@@ -154,7 +154,11 @@ extension TokenDataSource: UICollectionViewDelegateFlowLayout {
 
 			// Default currently is TokenCollectionViewCell
 			default:
-				return tokens[indexPath.row].size(withAttributes: [.font: UIFont.systemFont(ofSize: 18)])
+				let font = UIFont.systemFont(ofSize: 18)
+				let width = tokens[indexPath.row].size(withAttributes: [.font: font]).width
+				let horizontalPadding = 8.0
+				let verticalPadding = 8.0
+				return CGSize(width: width + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
 		}
 	}
 }

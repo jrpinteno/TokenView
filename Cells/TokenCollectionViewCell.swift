@@ -31,10 +31,10 @@ class TokenCollectionViewCell: UICollectionViewCell {
 		tokenLabel.textColor = .white
 
 		addSubview(tokenLabel)
-		tokenLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-		tokenLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
-		tokenLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-		tokenLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+		tokenLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
+		tokenLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
+		tokenLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
+		tokenLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
 	}
 
 

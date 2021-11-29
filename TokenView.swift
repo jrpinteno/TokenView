@@ -35,7 +35,7 @@ class TokenView: UIView {
 	// MARK: Lazy views
 
 	private lazy var collectionView: TokenCollectionView = {
-		let layout = UICollectionViewFlowLayout()
+		let layout = TokenFlowLayout()
 		let view = TokenCollectionView(frame: .zero, collectionViewLayout: layout)
 		view.translatesAutoresizingMaskIntoConstraints = false
 
