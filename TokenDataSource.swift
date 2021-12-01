@@ -8,15 +8,30 @@
 import UIKit
 
 class TokenDataSource: NSObject {
-	/// Array
+	// MARK: Properties
+
+	/// Array of tokens
 	private(set) var tokens: [String] = []
 
+	/// Tokens + TextField + (Prompt if should be shown)
+	private var itemsCount: Int {
+		return tokens.count + 1 + (shouldShowPrompt ? 1 : 0)
+	}
+
+	/// Position of TextField in the collectionView
 	var textFieldIndexPath: IndexPath {
-		// TextField is always at the end, currently that would set its index to number of tokens
+		// TextField is always at the end
 		return IndexPath(item: tokens.count + (shouldShowPrompt ? 1 : 0), section: 0)
 	}
 
-	var shouldShowPrompt: Bool = true
+	/// IndexPath for prompt cell if it's shown
+	var promptIndexPath: IndexPath? {
+		return shouldShowPrompt ? IndexPath(item: 0, section: 0) : nil
+	}
+
+	var prompt: String?
+	var shouldShowPrompt: Bool = false
+
 
 	// MARK: Token operations
 
@@ -33,8 +48,8 @@ class TokenDataSource: NSObject {
 	/// - Returns: `IndexPath` for the first appearance of the given token
 	func indexPathFor(token: String) -> IndexPath? {
 		for i in 0 ..< tokens.count {
-			let index = shouldShowPrompt ? i + 1 : i
-			if token == tokens[index] {
+			if token == tokens[i] {
+				let index = shouldShowPrompt ? i + 1 : i
 				return IndexPath(item: index, section: 0)
 			}
 		}
@@ -46,7 +61,8 @@ class TokenDataSource: NSObject {
 	///
 	/// - Parameter indexPath: Position of the token to be removed
 	func removeToken(at indexPath: IndexPath) {
-		tokens.remove(at: indexPath.item)
+		let index = shouldShowPrompt ? indexPath.item - 1 : indexPath.item
+		tokens.remove(at: index)
 	}
 
 	/// Identifier of reusable cell to be used at a given `IndexPath`
@@ -59,7 +75,7 @@ class TokenDataSource: NSObject {
 			case (shouldShowPrompt ? 0 : nil):
 				return "PromptCollectionViewCell"
 
-			case tokens.count + (shouldShowPrompt ? 1 : 0):
+			case textFieldIndexPath.item:
 				return "TextFieldCollectionViewCell"
 
 			default:
@@ -72,9 +88,7 @@ class TokenDataSource: NSObject {
 // MARK: UICollectionViewDataSource methods
 extension TokenDataSource: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		// Amount of token tags + textField + prompt
-
-		return tokens.count + 1 + (shouldShowPrompt ? 1 : 0)
+		return itemsCount
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -82,6 +96,7 @@ extension TokenDataSource: UICollectionViewDataSource {
 
 		switch cell {
 			case let promptCell as PromptCollectionViewCell:
+				promptCell.text = prompt
 				break
 
 			case let tokenCell as TokenCollectionViewCell:
@@ -131,7 +146,7 @@ extension TokenDataSource: UICollectionViewDataSource {
 
 					self.append(token: text)
 
-					let newIndexPath = IndexPath(item: self.tokens.count - 1 + (self.shouldShowPrompt ? 1 : 0), section: 0)
+					let newIndexPath = IndexPath(item: self.textFieldIndexPath.item - 1, section: 0)
 
 					UIView.performWithoutAnimation {
 						collectionView.insertItems(at: [newIndexPath])
@@ -141,8 +156,10 @@ extension TokenDataSource: UICollectionViewDataSource {
 				textFieldCell.onEmptyDelete = { [weak self] in
 					guard let self = self else { return }
 
-					if !self.tokens.isEmpty, let cell = collectionView.cellForItem(at: self.textFieldIndexPath) {
-						_ = cell.becomeFirstResponder()
+					if !self.tokens.isEmpty {
+						let previousIndexPath = IndexPath(item: self.textFieldIndexPath.item - 1, section: 0)
+						let cell = collectionView.cellForItem(at: previousIndexPath)
+						_ = cell?.becomeFirstResponder()
 					}
 				}
 
@@ -168,7 +185,7 @@ extension TokenDataSource: UICollectionViewDelegateFlowLayout {
 
 		switch identifier {
 			case "PromptCollectionViewCell":
-				let width = "Prompt:".size(withAttributes: [.font: font]).width
+				let width = prompt?.size(withAttributes: [.font: font]).width ?? 0
 				return CGSize(width: width + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
 
 			case "TextFieldCollectionViewCell":

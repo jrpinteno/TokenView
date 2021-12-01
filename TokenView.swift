@@ -33,6 +33,9 @@ class TokenView: UIView {
 		if let layout = collectionView.collectionViewLayout as? TokenFlowLayout {
 			layout.delegate = self
 		}
+
+		tokenDataSource.prompt = "To:"
+		tokenDataSource.shouldShowPrompt = true
 	}
 
 

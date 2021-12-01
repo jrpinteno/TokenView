@@ -8,6 +8,16 @@
 import UIKit
 
 class PromptCollectionViewCell: UICollectionViewCell {
+	var text: String? {
+		get {
+			return promptLabel.text
+		}
+
+		set {
+			promptLabel.text = newValue
+		}
+	}
+
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 
@@ -29,12 +39,12 @@ class PromptCollectionViewCell: UICollectionViewCell {
 		promptLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
 	}
 
+
 	// MARK: Lazy views
 
 	private lazy var promptLabel: UILabel = {
 		let label = UILabel(frame: .zero)
 		label.translatesAutoresizingMaskIntoConstraints = false
-		label.text = "Prompt:"
 
 		return label
 	}()
