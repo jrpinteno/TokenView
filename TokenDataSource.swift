@@ -13,9 +13,10 @@ class TokenDataSource: NSObject {
 
 	var textFieldIndexPath: IndexPath {
 		// TextField is always at the end, currently that would set its index to number of tokens
-		return IndexPath(item: tokens.count, section: 0)
+		return IndexPath(item: tokens.count + (shouldShowPrompt ? 1 : 0), section: 0)
 	}
 
+	var shouldShowPrompt: Bool = true
 
 	// MARK: Token operations
 
@@ -32,8 +33,9 @@ class TokenDataSource: NSObject {
 	/// - Returns: `IndexPath` for the first appearance of the given token
 	func indexPathFor(token: String) -> IndexPath? {
 		for i in 0 ..< tokens.count {
-			if token == tokens[i] {
-				return IndexPath(item: i, section: 0)
+			let index = shouldShowPrompt ? i + 1 : i
+			if token == tokens[index] {
+				return IndexPath(item: index, section: 0)
 			}
 		}
 
@@ -54,7 +56,10 @@ class TokenDataSource: NSObject {
 	/// - Returns: Cell identifier
 	private func identifier(forCellAtIndexPath indexPath: IndexPath) -> String {
 		switch indexPath.item {
-			case tokens.count:
+			case (shouldShowPrompt ? 0 : nil):
+				return "PromptCollectionViewCell"
+
+			case tokens.count + (shouldShowPrompt ? 1 : 0):
 				return "TextFieldCollectionViewCell"
 
 			default:
@@ -67,17 +72,20 @@ class TokenDataSource: NSObject {
 // MARK: UICollectionViewDataSource methods
 extension TokenDataSource: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		// Amount of token tags + textField
+		// Amount of token tags + textField + prompt
 
-		return tokens.count + 1
+		return tokens.count + 1 + (shouldShowPrompt ? 1 : 0)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier(forCellAtIndexPath: indexPath), for: indexPath)
 
 		switch cell {
+			case let promptCell as PromptCollectionViewCell:
+				break
+
 			case let tokenCell as TokenCollectionViewCell:
-				let token = tokens[indexPath.item]
+				let token = tokens[indexPath.item + (shouldShowPrompt ? -1 : 0)]
 				tokenCell.configure(with: token)
 
 				tokenCell.willBeRemoved = { [weak self] in
@@ -123,7 +131,7 @@ extension TokenDataSource: UICollectionViewDataSource {
 
 					self.append(token: text)
 
-					let newIndexPath = IndexPath(item: self.tokens.count - 1, section: 0)
+					let newIndexPath = IndexPath(item: self.tokens.count - 1 + (self.shouldShowPrompt ? 1 : 0), section: 0)
 
 					UIView.performWithoutAnimation {
 						collectionView.insertItems(at: [newIndexPath])
@@ -159,13 +167,17 @@ extension TokenDataSource: UICollectionViewDelegateFlowLayout {
 		let verticalPadding = 8.0
 
 		switch identifier {
+			case "PromptCollectionViewCell":
+				let width = "Prompt:".size(withAttributes: [.font: font]).width
+				return CGSize(width: width + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
+
 			case "TextFieldCollectionViewCell":
 				// Here we return the minimum size for the TextField
 				return CGSize(width: 60, height: font.lineHeight + verticalPadding * 2)
 
 			// Default currently is TokenCollectionViewCell
 			default:
-				let width = tokens[indexPath.row].size(withAttributes: [.font: font]).width
+				let width = tokens[shouldShowPrompt ? indexPath.item - 1 : indexPath.item].size(withAttributes: [.font: font]).width
 
 				return CGSize(width: width + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
 		}

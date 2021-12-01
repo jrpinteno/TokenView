@@ -20,8 +20,13 @@ class PromptCollectionViewCell: UICollectionViewCell {
 
 	private func setupView() {
 		isUserInteractionEnabled = false
+		backgroundColor = .darkGray
 
 		addSubview(promptLabel)
+		promptLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
+		promptLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
+		promptLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
+		promptLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
 	}
 
 	// MARK: Lazy views
@@ -29,6 +34,7 @@ class PromptCollectionViewCell: UICollectionViewCell {
 	private lazy var promptLabel: UILabel = {
 		let label = UILabel(frame: .zero)
 		label.translatesAutoresizingMaskIntoConstraints = false
+		label.text = "Prompt:"
 
 		return label
 	}()
