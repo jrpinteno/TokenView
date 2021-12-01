@@ -9,7 +9,13 @@ import UIKit
 
 class TokenDataSource: NSObject {
 	/// Array
-	private var tokens: [String] = []
+	private(set) var tokens: [String] = []
+
+	var textFieldIndexPath: IndexPath {
+		// TextField is always at the end, currently that would set its index to number of tokens
+		return IndexPath(item: tokens.count, section: 0)
+	}
+
 
 	// MARK: Token operations
 
@@ -58,6 +64,7 @@ class TokenDataSource: NSObject {
 }
 
 
+// MARK: UICollectionViewDataSource methods
 extension TokenDataSource: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		// Amount of token tags + textField
@@ -85,7 +92,7 @@ extension TokenDataSource: UICollectionViewDataSource {
 
 						// TODO: Considerations. When deleting token, should it go to the following tag, textfield or do nothing?
 						// Currently we make textfield first responder
-						if let textFieldCell = collectionView.cellForItem(at: IndexPath(item: self.tokens.count, section: 0)) as? TextFieldCollectionViewCell {
+						if let textFieldCell = collectionView.cellForItem(at: self.textFieldIndexPath) as? TextFieldCollectionViewCell {
 
 							_ = textFieldCell.becomeFirstResponder()
 						}
@@ -102,7 +109,7 @@ extension TokenDataSource: UICollectionViewDataSource {
 							collectionView.deleteItems(at: [removedIndexPath])
 						}
 
-						if let textFieldCell = collectionView.cellForItem(at: IndexPath(item: self.tokens.count, section: 0)) as? TextFieldCollectionViewCell {
+						if let textFieldCell = collectionView.cellForItem(at: self.textFieldIndexPath) as? TextFieldCollectionViewCell {
 
 							_ = textFieldCell.becomeFirstResponder()
 							textFieldCell.text = text
@@ -126,10 +133,8 @@ extension TokenDataSource: UICollectionViewDataSource {
 				textFieldCell.onEmptyDelete = { [weak self] in
 					guard let self = self else { return }
 
-					if !self.tokens.isEmpty {
-						let lastTokenIndexPath = IndexPath(item: self.tokens.count - 1, section: 0)
-						let cell = collectionView.cellForItem(at: lastTokenIndexPath)
-						_ = cell?.becomeFirstResponder()
+					if !self.tokens.isEmpty, let cell = collectionView.cellForItem(at: self.textFieldIndexPath) {
+						_ = cell.becomeFirstResponder()
 					}
 				}
 
@@ -143,27 +148,32 @@ extension TokenDataSource: UICollectionViewDataSource {
 	}
 }
 
+
+// MARK: UICollectionViewDelegateFlowLayout methods
 extension TokenDataSource: UICollectionViewDelegateFlowLayout {
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		// TODO: Use a ViewModel or something else to handle size that is more customizable
 		let identifier = identifier(forCellAtIndexPath: indexPath)
+		let font = UIFont.systemFont(ofSize: 18)
+		let horizontalPadding = 8.0
+		let verticalPadding = 8.0
 
 		switch identifier {
 			case "TextFieldCollectionViewCell":
-				return CGSize(width: 60, height: 20)
+				// Here we return the minimum size for the TextField
+				return CGSize(width: 60, height: font.lineHeight + verticalPadding * 2)
 
 			// Default currently is TokenCollectionViewCell
 			default:
-				let font = UIFont.systemFont(ofSize: 18)
 				let width = tokens[indexPath.row].size(withAttributes: [.font: font]).width
-				let horizontalPadding = 8.0
-				let verticalPadding = 8.0
+
 				return CGSize(width: width + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
 		}
 	}
 }
 
 
+// MARK: UICollectionViewDelegate methods
 extension TokenDataSource: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		if let cell = collectionView.cellForItem(at: indexPath) as? TokenCollectionViewCell {

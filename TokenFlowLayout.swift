@@ -7,8 +7,18 @@
 
 import UIKit
 
+protocol TokenFlowLayoutDelegate: AnyObject {
+	/// Asks the delegate for the position of the TextField Cell
+	///
+	/// - Returns: IndexPath of TextField cell
+	func textFieldIndexPath(in collectionView: UICollectionView) -> IndexPath
+}
+
+
 /// Custom collection flow layout to handle left-aligned tags.
 class TokenFlowLayout: UICollectionViewFlowLayout {
+	weak var delegate: TokenFlowLayoutDelegate? = nil
+
 	// TODO: Should be configurable
 	/// Space between cells in the collectionView
 	private let cellPadding: CGFloat = 8.0
@@ -28,19 +38,54 @@ class TokenFlowLayout: UICollectionViewFlowLayout {
 			return nil
 		}
 
-		var leftMargin = sectionInset.left
-		var maxY: CGFloat = 0.0
+		var newLayoutAttributes: [UICollectionViewLayoutAttributes] = []
 
 		for attribute in layoutAttributes {
-			if attribute.frame.origin.y >= maxY {
-				leftMargin = sectionInset.left
+			if attribute.representedElementCategory == .cell, let newAttributes = layoutAttributesForItem(at: attribute.indexPath) {
+				newLayoutAttributes.append(newAttributes)
+			} else {
+				newLayoutAttributes.append(attribute)
 			}
+		}
 
-			attribute.frame.origin.x = leftMargin
-			leftMargin += attribute.frame.width + cellPadding
-			maxY = max(attribute.frame.maxY, maxY)
+		return newLayoutAttributes
+	}
+
+
+	override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+		guard let collectionView = collectionView else { return nil }
+
+		// We make a copy of the attribute to avoid cache mismatch (and warning)
+		guard let layoutAttributes = super.layoutAttributesForItem(at: indexPath)?.copy() as? UICollectionViewLayoutAttributes else {
+			return nil
+		}
+
+		// First item only requires having the inset left
+		if indexPath.item == 0 {
+			layoutAttributes.frame.origin.x = sectionInset.left
+			return layoutAttributes
+		}
+
+		if let previousAttributes = layoutAttributesForItem(at: IndexPath(item: indexPath.item - 1, section: 0)),
+			layoutAttributes.frameInSameLine(as: previousAttributes) {
+			layoutAttributes.frame.origin.x = previousAttributes.frame.origin.x + previousAttributes.frame.width + cellPadding
+		}
+
+		// If the cell to layout corresponds to the TextField, it will be stretched to fill collection width
+		if indexPath == delegate?.textFieldIndexPath(in: collectionView) {
+			let width = collectionView.bounds.width - layoutAttributes.frame.origin.x - sectionInset.right
+			layoutAttributes.frame.size.width = width
 		}
 
 		return layoutAttributes
+	}
+}
+
+
+extension UICollectionViewLayoutAttributes {
+	fileprivate func frameInSameLine(as attributes: UICollectionViewLayoutAttributes) -> Bool {
+		let fullLineFrame = CGRect(x: -.infinity, y: frame.origin.y, width: .infinity, height: size.height)
+
+		return fullLineFrame.intersects(attributes.frame)
 	}
 }

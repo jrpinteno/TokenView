@@ -29,6 +29,10 @@ class TokenView: UIView {
 
 		collectionView.dataSource = tokenDataSource
 		collectionView.delegate = tokenDataSource
+
+		if let layout = collectionView.collectionViewLayout as? TokenFlowLayout {
+			layout.delegate = self
+		}
 	}
 
 
@@ -41,4 +45,10 @@ class TokenView: UIView {
 
 		return view
 	}()
+}
+
+extension TokenView: TokenFlowLayoutDelegate {
+	func textFieldIndexPath(in collectionView: UICollectionView) -> IndexPath {
+		return tokenDataSource.textFieldIndexPath
+	}
 }
