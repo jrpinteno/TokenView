@@ -150,6 +150,7 @@ extension TokenDataSource: UICollectionViewDataSource {
 
 					UIView.performWithoutAnimation {
 						collectionView.insertItems(at: [newIndexPath])
+						collectionView.scrollToItem(at: self.textFieldIndexPath, at: .top, animated: true)
 					}
 				}
 

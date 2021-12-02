@@ -29,6 +29,7 @@ class TokenView: UIView {
 
 		collectionView.dataSource = tokenDataSource
 		collectionView.delegate = tokenDataSource
+		collectionView.isScrollEnabled = true
 
 		if let layout = collectionView.collectionViewLayout as? TokenFlowLayout {
 			layout.delegate = self
