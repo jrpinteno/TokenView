@@ -14,7 +14,7 @@ class TokenDataSource: NSObject {
 	private(set) var tokens: [String] = []
 
 	/// Tokens + TextField + (Prompt if should be shown)
-	private var itemsCount: Int {
+	var itemsCount: Int {
 		return tokens.count + 1 + (shouldShowPrompt ? 1 : 0)
 	}
 
@@ -29,17 +29,37 @@ class TokenDataSource: NSObject {
 		return shouldShowPrompt ? IndexPath(item: 0, section: 0) : nil
 	}
 
+	/// Non-editable text to show before the line of tokens
 	var prompt: String?
+
+	/// Tells whether label with prompt is shown. It affects to calculation
+	/// regarding IndexPath of the different items
 	var shouldShowPrompt: Bool = false
 
 
 	// MARK: Token operations
+
+	/// Fetch token at the given `IndexPath`
+	///
+	/// - Parameter indexPath: Position at which the token should be
+	/// - Returns: Token which will be displayed
+	func token(at indexPath: IndexPath) -> String {
+		return tokens[indexPath.item + (shouldShowPrompt ? -1 : 0)]
+	}
 
 	/// Appends a token to the token list
 	///
 	/// - Parameter token: Token to be appended
 	func append(token: String) {
 		tokens.append(token)
+	}
+
+	/// Removes the token at the given `IndexPath`
+	///
+	/// - Parameter indexPath: Position of the token to be removed
+	func removeToken(at indexPath: IndexPath) {
+		let index = shouldShowPrompt ? indexPath.item - 1 : indexPath.item
+		tokens.remove(at: index)
 	}
 
 	/// Finds `IndexPath` for a given token
@@ -57,120 +77,24 @@ class TokenDataSource: NSObject {
 		return nil
 	}
 
-	/// Removes the token at the given `IndexPath`
-	///
-	/// - Parameter indexPath: Position of the token to be removed
-	func removeToken(at indexPath: IndexPath) {
-		let index = shouldShowPrompt ? indexPath.item - 1 : indexPath.item
-		tokens.remove(at: index)
-	}
 
+	// MARK: Helper methods to get data according to item position
 	/// Identifier of reusable cell to be used at a given `IndexPath`
 	///
 	/// - Parameter indexPath: IndexPath of cell
 	///
 	/// - Returns: Cell identifier
-	private func identifier(forCellAtIndexPath indexPath: IndexPath) -> String {
+	func identifier(forCellAtIndexPath indexPath: IndexPath) -> String {
 		switch indexPath.item {
 			case (shouldShowPrompt ? 0 : nil):
-				return "PromptCollectionViewCell"
+				return PromptCollectionViewCell.reuseIdentifier
 
 			case textFieldIndexPath.item:
-				return "TextFieldCollectionViewCell"
+				return TextFieldCollectionViewCell.reuseIdentifier
 
 			default:
-				return "TokenCollectionViewCell"
+				return TokenCollectionViewCell.reuseIdentifier
 		}
-	}
-}
-
-
-// MARK: UICollectionViewDataSource methods
-extension TokenDataSource: UICollectionViewDataSource {
-	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return itemsCount
-	}
-
-	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier(forCellAtIndexPath: indexPath), for: indexPath)
-
-		switch cell {
-			case let promptCell as PromptCollectionViewCell:
-				promptCell.text = prompt
-				break
-
-			case let tokenCell as TokenCollectionViewCell:
-				let token = tokens[indexPath.item + (shouldShowPrompt ? -1 : 0)]
-				tokenCell.configure(with: token)
-
-				tokenCell.willBeRemoved = { [weak self] in
-					guard let self = self else { return }
-
-					if let removedIndexPath = self.indexPathFor(token: token) {
-						self.removeToken(at: removedIndexPath)
-
-						UIView.performWithoutAnimation {
-							collectionView.deleteItems(at: [removedIndexPath])
-						}
-
-						// TODO: Considerations. When deleting token, should it go to the following tag, textfield or do nothing?
-						// Currently we make textfield first responder
-						if let textFieldCell = collectionView.cellForItem(at: self.textFieldIndexPath) as? TextFieldCollectionViewCell {
-
-							_ = textFieldCell.becomeFirstResponder()
-						}
-					}
-				}
-
-				tokenCell.willReplaceText = { [weak self] text in
-					guard let self = self else { return }
-
-					if let removedIndexPath = self.indexPathFor(token: token) {
-						self.removeToken(at: removedIndexPath)
-
-						UIView.performWithoutAnimation {
-							collectionView.deleteItems(at: [removedIndexPath])
-						}
-
-						if let textFieldCell = collectionView.cellForItem(at: self.textFieldIndexPath) as? TextFieldCollectionViewCell {
-
-							_ = textFieldCell.becomeFirstResponder()
-							textFieldCell.text = text
-						}
-					}
-				}
-
-			case let textFieldCell as TextFieldCollectionViewCell:
-				textFieldCell.onTextReturn = { [weak self] text in
-					guard let self = self else { return }
-
-					self.append(token: text)
-
-					let newIndexPath = IndexPath(item: self.textFieldIndexPath.item - 1, section: 0)
-
-					UIView.performWithoutAnimation {
-						collectionView.insertItems(at: [newIndexPath])
-						collectionView.scrollToItem(at: self.textFieldIndexPath, at: .top, animated: true)
-					}
-				}
-
-				textFieldCell.onEmptyDelete = { [weak self] in
-					guard let self = self else { return }
-
-					if !self.tokens.isEmpty {
-						let previousIndexPath = IndexPath(item: self.textFieldIndexPath.item - 1, section: 0)
-						let cell = collectionView.cellForItem(at: previousIndexPath)
-						_ = cell?.becomeFirstResponder()
-					}
-				}
-
-				return textFieldCell
-
-			default:
-				break
-		}
-
-		return cell
 	}
 }
 
@@ -185,19 +109,19 @@ extension TokenDataSource: UICollectionViewDelegateFlowLayout {
 		let verticalPadding = 8.0
 
 		switch identifier {
-			case "PromptCollectionViewCell":
+			case PromptCollectionViewCell.reuseIdentifier:
 				let width = prompt?.size(withAttributes: [.font: font]).width ?? 0
 				return CGSize(width: width + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
 
-			case "TextFieldCollectionViewCell":
+			case TextFieldCollectionViewCell.reuseIdentifier:
 				// Here we return the minimum size for the TextField
 				return CGSize(width: 60, height: font.lineHeight + verticalPadding * 2)
 
 			// Default currently is TokenCollectionViewCell
 			default:
-				let width = tokens[shouldShowPrompt ? indexPath.item - 1 : indexPath.item].size(withAttributes: [.font: font]).width
+				let width = token(at: indexPath).size(withAttributes: [.font: font]).width
 
-				return CGSize(width: width + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
+				return CGSize(width: ceil(width) + 4 * 2, height: font.lineHeight + 2 * 2)
 		}
 	}
 }

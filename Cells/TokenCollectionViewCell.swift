@@ -12,7 +12,7 @@ class TokenCollectionViewCell: UICollectionViewCell {
 	var willBeRemoved: (() -> Void)?
 	var willReplaceText: ((_ text: String) -> Void)?
 
-	override init(frame: CGRect) {
+	private override init(frame: CGRect) {
 		super.init(frame: frame)
 
 		setupView()
@@ -26,15 +26,18 @@ class TokenCollectionViewCell: UICollectionViewCell {
 		tokenLabel.text = text
 	}
 
-	private func setupView() {
-		backgroundColor = .lightGray
-		tokenLabel.textColor = .white
+	func setupView(with style: TokenStyle = DefaultStyle()) {
+		backgroundColor = style.backgroundColor
+		layer.cornerRadius = style.cornerRadius
+
+		tokenLabel.textColor = style.textColor
+		tokenLabel.font = style.font
 
 		addSubview(tokenLabel)
-		tokenLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
-		tokenLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
-		tokenLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
-		tokenLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
+		tokenLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: style.contentInset.left).isActive = true
+		tokenLabel.topAnchor.constraint(equalTo: topAnchor, constant: style.contentInset.top).isActive = true
+		tokenLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -style.contentInset.right).isActive = true
+		tokenLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -style.contentInset.bottom).isActive = true
 	}
 
 

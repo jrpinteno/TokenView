@@ -28,15 +28,17 @@ class PromptCollectionViewCell: UICollectionViewCell {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	private func setupView() {
+	private func setupView(with style: TokenStyle = DefaultPromptStyle()) {
 		isUserInteractionEnabled = false
-		backgroundColor = .darkGray
+		backgroundColor = style.backgroundColor
+		promptLabel.textColor = style.textColor
+		promptLabel.layer.cornerRadius = style.cornerRadius
 
 		addSubview(promptLabel)
-		promptLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
-		promptLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
-		promptLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
-		promptLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
+		promptLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: style.contentInset.left).isActive = true
+		promptLabel.topAnchor.constraint(equalTo: topAnchor, constant: style.contentInset.top).isActive = true
+		promptLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -style.contentInset.right).isActive = true
+		promptLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -style.contentInset.bottom).isActive = true
 	}
 
 
