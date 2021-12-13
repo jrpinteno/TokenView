@@ -14,11 +14,13 @@ class EmptyAwareTextField: UITextField {
 	var onEmptyDelete: (() -> Void)?
 
 	override func deleteBackward() {
-		super.deleteBackward()
+		guard let text = text, text.isEmpty else {
+			super.deleteBackward()
 
-		// FIX: mmmm should check
-		if let text = text, text.isEmpty {
-			onEmptyDelete?()
+			return
 		}
+
+		// TODO: Is it necessary to call super on empty?
+		onEmptyDelete?()
 	}
 }
