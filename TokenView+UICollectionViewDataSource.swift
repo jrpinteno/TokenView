@@ -56,7 +56,12 @@ fileprivate extension TokenView {
 
 	func configureCell(_ textFieldCell: TextFieldCollectionViewCell) {
 		textFieldCell.onTextReturn = { [weak self] text in
-			guard let self = self else { return }
+			guard let self = self else { return true }
+
+			// If token needs validation and it's not valid stop here
+			if self.validationRequired && self.delegate?.tokenView(self, isTokenValid: text) == false {
+				return false
+			}
 
 			self.tokenDataSource.append(token: text)
 
@@ -66,6 +71,8 @@ fileprivate extension TokenView {
 				self.collectionView.insertItems(at: [newIndexPath])
 				self.collectionView.scrollToItem(at: self.tokenDataSource.textFieldIndexPath, at: .top, animated: true)
 			}
+
+			return true
 		}
 
 		textFieldCell.onEmptyDelete = { [weak self] in

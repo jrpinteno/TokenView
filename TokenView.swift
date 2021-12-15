@@ -7,9 +7,15 @@
 
 import UIKit
 
+protocol TokenViewDelegate {
+	func tokenView(_ view: TokenView, isTokenValid token: String) -> Bool
+}
+
+
 class TokenView: UIView {
 	// MARK: Properties
 	let tokenDataSource: TokenDataSource = .init()
+	var delegate: TokenViewDelegate? = nil
 
 	var prompt: String? = nil {
 		didSet {
@@ -25,6 +31,8 @@ class TokenView: UIView {
 
 	// If not defined, return Configuration.Style.Token
 	var customTokenStyle: TokenStyle?
+
+	var validationRequired: Bool = false
 
 	override init(frame: CGRect) {
 		super.init(frame: frame)

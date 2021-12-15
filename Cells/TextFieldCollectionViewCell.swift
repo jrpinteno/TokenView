@@ -11,7 +11,7 @@ class TextFieldCollectionViewCell: UICollectionViewCell {
 	// MARK: Properties
 
 	/// Closure called when inner textfield returns
-	var onTextReturn: ((_ text: String) -> Void)?
+	var onTextReturn: ((_ text: String) -> Bool)?
 
 	/// Closure called when textfield is trying to backwards delete and is empty
 	var onEmptyDelete: (() -> Void)?
@@ -78,10 +78,9 @@ extension TextFieldCollectionViewCell: UITextFieldDelegate {
 			return true
 		}
 
-		onTextReturn?(text)
-
-		// TODO: call closure onReturn with text, validation is done other side
-		textField.text = nil
+		if onTextReturn?(text) == true {
+			textField.text = nil
+		}
 
 		return false
 	}
