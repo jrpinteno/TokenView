@@ -56,23 +56,11 @@ fileprivate extension TokenView {
 
 	func configureCell(_ textFieldCell: TextFieldCollectionViewCell) {
 		textFieldCell.onTextReturn = { [weak self] text in
-			guard let self = self else { return true }
-
-			// If token needs validation and it's not valid stop here
-			if self.validationRequired && self.delegate?.tokenView(self, isTokenValid: text) == false {
-				return false
+			guard let self = self else {
+				return true
 			}
 
-			self.tokenDataSource.append(token: text)
-
-			let newIndexPath = IndexPath(item: self.tokenDataSource.textFieldIndexPath.item - 1, section: 0)
-
-			UIView.performWithoutAnimation {
-				self.collectionView.insertItems(at: [newIndexPath])
-				self.collectionView.scrollToItem(at: self.tokenDataSource.textFieldIndexPath, at: .top, animated: true)
-			}
-
-			return true
+			return self.addToken(text)
 		}
 
 		textFieldCell.onEmptyDelete = { [weak self] in
@@ -84,6 +72,47 @@ fileprivate extension TokenView {
 				_ = cell?.becomeFirstResponder()
 			}
 		}
+
+		textFieldCell.onTextChanged = { [weak self] text in
+			guard let self = self else {
+				return true
+			}
+
+			// TODO: Customize delimiters so they are not hardcoded
+			if text.hasSuffix(",") || text.hasSuffix(" ") {
+				return self.addToken(text.dropLast().trimmingCharacters(in: .whitespaces))
+			}
+
+			return false
+		}
+	}
+
+	/// Adds new token to the collectionView and DataSource
+	///
+	/// In case validation is required, a call to the delegate is made
+	///
+	/// - Parameter text: Token to be added
+	/// - Returns: Whether the token has been successfully addded
+	func addToken(_ text: String) -> Bool {
+		guard !text.isEmpty else {
+			return false
+		}
+
+		// If token needs validation and it's not valid stop here
+		if self.validationRequired && self.delegate?.tokenView(self, isTokenValid: text) == false {
+			return false
+		}
+
+		self.tokenDataSource.append(token: text)
+
+		let newIndexPath = IndexPath(item: self.tokenDataSource.textFieldIndexPath.item - 1, section: 0)
+
+		UIView.performWithoutAnimation {
+			self.collectionView.insertItems(at: [newIndexPath])
+			self.collectionView.scrollToItem(at: self.tokenDataSource.textFieldIndexPath, at: .top, animated: true)
+		}
+
+		return true
 	}
 
 	/// Removes a token

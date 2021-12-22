@@ -7,6 +7,10 @@
 
 import UIKit
 
+fileprivate extension Selector {
+	static let textChanged = #selector(TextFieldCollectionViewCell.textChanged(_:))
+}
+
 class TextFieldCollectionViewCell: UICollectionViewCell {
 	// MARK: Properties
 
@@ -15,6 +19,9 @@ class TextFieldCollectionViewCell: UICollectionViewCell {
 
 	/// Closure called when textfield is trying to backwards delete and is empty
 	var onEmptyDelete: (() -> Void)?
+
+	/// Closure called when textfield text has changed
+	var onTextChanged: ((_ text: String) -> Bool)?
 
 	/// Helper to get/set text in the `UITextField`
 	var text: String? {
@@ -51,6 +58,8 @@ class TextFieldCollectionViewCell: UICollectionViewCell {
 		textField.onEmptyDelete = { [weak self] in
 			self?.onEmptyDelete?()
 		}
+
+		textField.addTarget(self, action: .textChanged, for: .editingChanged)
 	}
 
 	override func becomeFirstResponder() -> Bool {
@@ -63,6 +72,7 @@ class TextFieldCollectionViewCell: UICollectionViewCell {
 	private lazy var textField: EmptyAwareTextField = {
 		let field = EmptyAwareTextField()
 		field.translatesAutoresizingMaskIntoConstraints = false
+		field.keyboardType = .emailAddress
 		field.autocorrectionType = .no
 		field.autocapitalizationType = .none
 		field.placeholder = "Type here..."
@@ -83,5 +93,15 @@ extension TextFieldCollectionViewCell: UITextFieldDelegate {
 		}
 
 		return false
+	}
+
+	@objc func textChanged(_ textField: UITextField) {
+		guard let text = textField.text else {
+			return
+		}
+
+		if onTextChanged?(text) == true {
+			textField.text = nil
+		}
 	}
 }

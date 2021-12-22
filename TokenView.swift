@@ -9,6 +9,8 @@ import UIKit
 
 protocol TokenViewDelegate {
 	func tokenView(_ view: TokenView, isTokenValid token: String) -> Bool
+	func tokenView(_ view: TokenView, didSelectToken token: String)
+	func tokenView(_ view: TokenView, didRemoveToken token: String)
 }
 
 
