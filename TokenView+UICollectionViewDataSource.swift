@@ -73,17 +73,21 @@ fileprivate extension TokenView {
 			}
 		}
 
-		textFieldCell.onTextChanged = { [weak self] text in
-			guard let self = self else {
-				return true
-			}
+		// OnTextChanged currently only makes sense when delimiters are set, otherwise token is
+		// only to be added upon return
+		if let delimiters = delimiters {
+			textFieldCell.onTextChanged = { [weak self] text in
+				guard let self = self else {
+					return true
+				}
 
-			// TODO: Customize delimiters so they are not hardcoded
-			if text.hasSuffix(",") || text.hasSuffix(" ") {
-				return self.addToken(text.dropLast().trimmingCharacters(in: .whitespaces))
-			}
+				// If string delimiters are set, then check against them
+				if delimiters.contains(String(text.suffix(1))) {
+					return self.addToken(text.dropLast().trimmingCharacters(in: .whitespaces))
+				}
 
-			return false
+				return false
+			}
 		}
 	}
 

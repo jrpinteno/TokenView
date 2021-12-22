@@ -34,6 +34,10 @@ class TokenView: UIView {
 	// If not defined, return Configuration.Style.Token
 	var customTokenStyle: TokenStyle?
 
+	/// Delimiters to check on new text entry for token generation
+	var delimiters: [String]? = nil
+
+	/// Should tokens be validated before being added
 	var validationRequired: Bool = false
 
 	override init(frame: CGRect) {
