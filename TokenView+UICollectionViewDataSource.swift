@@ -86,9 +86,32 @@ fileprivate extension TokenView {
 					return self.addToken(text.dropLast().trimmingCharacters(in: .whitespaces))
 				}
 
+				self.showPicker(for: text)
+
 				return false
 			}
 		}
+	}
+
+	func showPicker(for pattern: String) {
+		guard !pattern.isEmpty else {
+			hidePicker()
+			return
+		}
+
+		// TODO: Call delegate to check data and return
+		// guard delegate.filterpattern...
+		if picker.viewIfLoaded?.window == nil {
+			// delegate is lost upon dismissal
+			picker.popoverPresentationController?.delegate = self
+			delegate?.tokenView(self, present: picker)
+		}
+
+		picker.pattern = pattern
+	}
+
+	func hidePicker() {
+		picker.dismiss(animated: false)
 	}
 
 	/// Adds new token to the collectionView and DataSource

@@ -7,17 +7,27 @@
 
 import UIKit
 
-protocol TokenViewDelegate {
+protocol PickerDataSource: AnyObject {
+	func items(with pattern: String) -> [String]
+}
+
+protocol TokenViewDelegate: AnyObject {
 	func tokenView(_ view: TokenView, isTokenValid token: String) -> Bool
 	func tokenView(_ view: TokenView, didSelectToken token: String)
 	func tokenView(_ view: TokenView, didRemoveToken token: String)
+	func tokenView(_ view: TokenView, present picker: PickerViewController)
 }
 
 
 class TokenView: UIView {
-	// MARK: Properties
+// MARK: Properties
 	let tokenDataSource: TokenDataSource = .init()
-	var delegate: TokenViewDelegate? = nil
+	weak var delegate: TokenViewDelegate? = nil
+	weak var pickerDataSource: PickerDataSource? = nil {
+		didSet {
+			picker.dataSource = pickerDataSource
+		}
+	}
 
 	var prompt: String? = nil {
 		didSet {
@@ -67,7 +77,7 @@ class TokenView: UIView {
 	}
 
 
-	// MARK: Lazy views
+// MARK: Lazy views
 
 	lazy var collectionView: TokenCollectionView = {
 		let layout = TokenFlowLayout()
@@ -76,6 +86,13 @@ class TokenView: UIView {
 
 		return view
 	}()
+
+	lazy var picker: PickerViewController = {
+		let viewController = PickerViewController()
+		viewController.modalPresentationStyle = .popover
+
+		return viewController
+	}()
 }
 
 
@@ -83,5 +100,25 @@ class TokenView: UIView {
 extension TokenView: TokenFlowLayoutDelegate {
 	func textFieldIndexPath(in collectionView: UICollectionView) -> IndexPath {
 		return tokenDataSource.textFieldIndexPath
+	}
+}
+
+
+// MARK: UIPopoverPresentationControllerDelegate methods
+extension TokenView: UIPopoverPresentationControllerDelegate {
+	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+		popoverPresentationController.sourceView = self
+		popoverPresentationController.sourceRect = self.bounds
+		popoverPresentationController.canOverlapSourceViewRect = false
+	}
+
+	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+		print("adaptivePresentationStyle")
+		return .none
+	}
+
+	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+		print("adaptivePresentationStyle")
+		return .none
 	}
 }
