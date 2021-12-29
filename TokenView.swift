@@ -7,8 +7,16 @@
 
 import UIKit
 
+protocol Pickable {
+	var title: String { get }
+	var subtitle: String? { get }
+	var image: UIImage? { get }
+
+	func contains(_ pattern: String) -> Bool
+}
+
 protocol PickerDataSource: AnyObject {
-	func items(with pattern: String) -> [String]
+	func items(with pattern: String) -> [Pickable]
 }
 
 protocol TokenViewDelegate: AnyObject {
@@ -113,12 +121,10 @@ extension TokenView: UIPopoverPresentationControllerDelegate {
 	}
 
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-		print("adaptivePresentationStyle")
 		return .none
 	}
 
 	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
-		print("adaptivePresentationStyle")
 		return .none
 	}
 }

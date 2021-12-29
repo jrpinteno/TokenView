@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UITableViewCell: ReusableCell {}
+extension PickerCell: ReusableCell {}
 
 class PickerViewController: UITableViewController {
 	var pattern: String = "" {
@@ -20,7 +20,7 @@ class PickerViewController: UITableViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.reuseIdentifier)
+		tableView.register(PickerCell.self, forCellReuseIdentifier: PickerCell.reuseIdentifier)
 	}
 
 
@@ -35,10 +35,10 @@ class PickerViewController: UITableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.reuseIdentifier, for: indexPath)
+		let cell = tableView.dequeueReusableCell(withIdentifier: PickerCell.reuseIdentifier, for: indexPath) as! PickerCell
 
 		if let item = dataSource?.items(with: pattern)[indexPath.item] {
-			cell.textLabel?.text = item
+			cell.populateCell(with: item)
 		}
 
 		return cell

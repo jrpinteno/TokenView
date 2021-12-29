@@ -1,0 +1,101 @@
+//
+//  PickerCell.swift
+//  TestContactPicker
+//
+//  Created by Xavi R. Pinteño on 29.12.2021.
+//
+
+import UIKit
+
+class PickerCell: UITableViewCell {
+	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+		super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+		setupView()
+	}
+
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+	func populateCell(with data: Pickable) {
+		titleLabel.text = data.title
+
+		if let subtitle = data.subtitle, !subtitle.isEmpty {
+			detailLabel.text = subtitle
+			detailLabel.isHidden = false
+		}
+
+		if let image = data.image {
+			photoView.image = image
+			photoView.isHidden = false
+		}
+	}
+
+
+	private func setupView() {
+		contentView.addSubview(horizontalStack)
+		horizontalStack.backgroundColor = .red
+		horizontalStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
+		horizontalStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+		horizontalStack.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8).isActive = true
+		horizontalStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8).isActive = true
+
+		horizontalStack.addArrangedSubview(photoView)
+
+		verticalStack.addArrangedSubview(titleLabel)
+		verticalStack.addArrangedSubview(detailLabel)
+
+		horizontalStack.addArrangedSubview(verticalStack)
+
+		photoView.isHidden = true
+		detailLabel.isHidden = true
+	}
+
+
+	// MARK: views
+
+	private lazy var horizontalStack: UIStackView = {
+		let stack = UIStackView(frame: .zero)
+		stack.translatesAutoresizingMaskIntoConstraints = false
+		stack.isLayoutMarginsRelativeArrangement = true
+		stack.spacing = 8
+		stack.alignment = .center
+		stack.distribution = .fill
+		stack.axis = .horizontal
+
+		return stack
+	}()
+
+	private lazy var verticalStack: UIStackView = {
+		let stack = UIStackView(frame: .zero)
+		stack.translatesAutoresizingMaskIntoConstraints = false
+		stack.axis = .vertical
+		stack.alignment = .fill
+		stack.distribution = .fill
+
+		return stack
+	}()
+
+	private lazy var photoView: UIImageView = {
+		let view = UIImageView(frame: .zero)
+		view.translatesAutoresizingMaskIntoConstraints = false
+		view.contentMode = .scaleAspectFit
+
+		return view
+	}()
+
+	private lazy var titleLabel: UILabel = {
+		let label = UILabel(frame: .zero)
+		label.translatesAutoresizingMaskIntoConstraints = false
+
+		return label
+	}()
+
+	private lazy var detailLabel: UILabel = {
+		let label = UILabel(frame: .zero)
+		label.translatesAutoresizingMaskIntoConstraints = false
+
+		return label
+	}()
+}
