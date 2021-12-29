@@ -15,11 +15,12 @@ public protocol ReusableCell: AnyObject {
 
 /// Default implementation for `UIView`, that way we don't need to repeat code in the
 /// diferent scenarios
-public extension ReusableCell where Self: UICollectionViewCell {
+public extension ReusableCell where Self: UIView {
 	static var reuseIdentifier: String {
 		return String(describing: self)
 	}
 }
+
 
 extension PromptCollectionViewCell: ReusableCell {}
 extension TextFieldCollectionViewCell: ReusableCell {}
