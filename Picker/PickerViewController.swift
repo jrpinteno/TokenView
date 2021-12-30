@@ -9,6 +9,18 @@ import UIKit
 
 extension PickerCell: ReusableCell {}
 
+protocol Pickable {
+	var title: String { get }
+	var subtitle: String? { get }
+	var image: UIImage? { get }
+
+	func contains(_ pattern: String) -> Bool
+}
+
+protocol PickerDataSource: AnyObject {
+	func items(with pattern: String) -> [Pickable]
+}
+
 class PickerViewController: UITableViewController {
 	var pattern: String = "" {
 		didSet {

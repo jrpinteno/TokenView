@@ -73,26 +73,26 @@ fileprivate extension TokenView {
 			}
 		}
 
-		// OnTextChanged currently only makes sense when delimiters are set, otherwise token is
-		// only to be added upon return
-		if let delimiters = delimiters {
-			textFieldCell.onTextChanged = { [weak self] text in
-				guard let self = self else {
-					return true
-				}
-
-				// If string delimiters are set, then check against them
-				if delimiters.contains(String(text.suffix(1))) {
-					return self.addToken(text.dropLast().trimmingCharacters(in: .whitespaces))
-				}
-
-				self.showPicker(for: text)
-
-				return false
+		textFieldCell.onTextChanged = { [weak self] text in
+			guard let self = self else {
+				return true
 			}
+
+			if let delimiters = self.delimiters, delimiters.contains(String(text.suffix(1))) {
+				return self.addToken(text.dropLast().trimmingCharacters(in: .whitespaces))
+			}
+
+			if self.shouldShowPicker {
+				self.showPicker(for: text)
+			}
+
+			return false
 		}
 	}
 
+	/// Shows selection picker
+	///
+	/// - Parameter pattern: Search pattern as criteria to show elements in picker
 	func showPicker(for pattern: String) {
 		guard !pattern.isEmpty else {
 			hidePicker()
@@ -110,6 +110,7 @@ fileprivate extension TokenView {
 		picker.pattern = pattern
 	}
 
+	/// Hides selection picker
 	func hidePicker() {
 		picker.dismiss(animated: false)
 	}

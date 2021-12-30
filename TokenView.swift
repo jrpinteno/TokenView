@@ -7,18 +7,6 @@
 
 import UIKit
 
-protocol Pickable {
-	var title: String { get }
-	var subtitle: String? { get }
-	var image: UIImage? { get }
-
-	func contains(_ pattern: String) -> Bool
-}
-
-protocol PickerDataSource: AnyObject {
-	func items(with pattern: String) -> [Pickable]
-}
-
 protocol TokenViewDelegate: AnyObject {
 	func tokenView(_ view: TokenView, isTokenValid token: String) -> Bool
 	func tokenView(_ view: TokenView, didSelectToken token: String)
@@ -48,6 +36,8 @@ class TokenView: UIView {
 			tokenDataSource.shouldShowPrompt = shouldShowPrompt
 		}
 	}
+
+	var shouldShowPicker: Bool = false
 
 	// If not defined, return Configuration.Style.Token
 	var customTokenStyle: TokenStyle?
