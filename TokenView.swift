@@ -10,14 +10,16 @@ import UIKit
 protocol TokenViewDelegate: AnyObject {
 	func tokenView(_ view: TokenView, isTokenValid token: String) -> Bool
 	func tokenView(_ view: TokenView, didSelectToken token: String)
+	func tokenView(_ view: TokenView, didAddToken token: String)
 	func tokenView(_ view: TokenView, didRemoveToken token: String)
 }
 
 
 class TokenView: UIView {
-// MARK: Properties
-	let tokenDataSource: TokenDataSource = .init()
+	// MARK: Properties
 	weak var delegate: TokenViewDelegate? = nil
+	let tokenDataSource: TokenDataSource = .init()
+
 	var pickerDataSource: PickerDataSource? = nil
 	var pickerHeight: CGFloat = 400
 
@@ -139,11 +141,5 @@ extension TokenView: UIPopoverPresentationControllerDelegate {
 
 	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
 		return .none
-	}
-}
-
-
-extension TokenView: UITableViewDelegate {
-	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 	}
 }

@@ -82,6 +82,7 @@ class TextFieldCollectionViewCell: UICollectionViewCell {
 }
 
 
+// MARK: UITextFieldDelegate methods
 extension TextFieldCollectionViewCell: UITextFieldDelegate {
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		guard let text = textField.text, !text.isEmpty else {

@@ -148,6 +148,13 @@ fileprivate extension TokenView {
 			self.collectionView.scrollToItem(at: self.tokenDataSource.textFieldIndexPath, at: .top, animated: true)
 		}
 
+		if shouldShowPicker {
+			pickerDataSource?.pattern = ""
+			hidePicker()
+		}
+
+		delegate?.tokenView(self, didAddToken: text)
+
 		return true
 	}
 
@@ -174,6 +181,22 @@ fileprivate extension TokenView {
 
 				_ = textFieldCell.becomeFirstResponder()
 				textFieldCell.text = replaceText
+			}
+		}
+	}
+}
+
+
+// MARK: UITableViewDelegate methods
+extension TokenView: UITableViewDelegate {
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if let item = pickerDataSource?.filteredItems[indexPath.item] {
+			if addToken(item.title) {
+				if let textFieldCell = collectionView.cellForItem(at: tokenDataSource.textFieldIndexPath) as? TextFieldCollectionViewCell {
+
+					_ = textFieldCell.becomeFirstResponder()
+					textFieldCell.text = nil
+				}
 			}
 		}
 	}
