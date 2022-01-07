@@ -101,18 +101,26 @@ fileprivate extension TokenView {
 
 		// TODO: Call delegate to check data and return
 		// guard delegate.filterpattern...
-		if picker.viewIfLoaded?.window == nil {
-			// delegate is lost upon dismissal
-			picker.popoverPresentationController?.delegate = self
-			delegate?.tokenView(self, present: picker)
+
+		if pickerView.window == nil {
+			addSubview(pickerView)
+			pickerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+			pickerView.topAnchor.constraint(equalTo: bottomAnchor).isActive = true
+			pickerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+			pickerView.heightAnchor.constraint(equalToConstant: pickerHeight).isActive = true
 		}
 
-		picker.pattern = pattern
+		if pickerView.isHidden {
+			pickerView.isHidden = false
+		}
+
+		pickerDataSource?.pattern = pattern
+		pickerView.reloadData()
 	}
 
 	/// Hides selection picker
 	func hidePicker() {
-		picker.dismiss(animated: false)
+		pickerView.isHidden = true
 	}
 
 	/// Adds new token to the collectionView and DataSource

@@ -7,6 +7,8 @@
 
 import UIKit
 
+extension PickerCell: ReusableCell {}
+
 class PickerCell: UITableViewCell {
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -29,17 +31,18 @@ class PickerCell: UITableViewCell {
 		if let image = data.image {
 			photoView.image = image
 			photoView.isHidden = false
+			photoView.heightAnchor.constraint(equalTo: verticalStack.heightAnchor).isActive = true
+			photoView.widthAnchor.constraint(equalTo: photoView.heightAnchor).isActive = true
 		}
 	}
 
 
 	private func setupView() {
 		contentView.addSubview(horizontalStack)
-		horizontalStack.backgroundColor = .red
 		horizontalStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
-		horizontalStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+		horizontalStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4).isActive = true
 		horizontalStack.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8).isActive = true
-		horizontalStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8).isActive = true
+		horizontalStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -4).isActive = true
 
 		horizontalStack.addArrangedSubview(photoView)
 
@@ -81,6 +84,8 @@ class PickerCell: UITableViewCell {
 		let view = UIImageView(frame: .zero)
 		view.translatesAutoresizingMaskIntoConstraints = false
 		view.contentMode = .scaleAspectFit
+		view.setContentHuggingPriority(.defaultLow, for: .vertical)
+		view.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
 
 		return view
 	}()
@@ -88,6 +93,7 @@ class PickerCell: UITableViewCell {
 	private lazy var titleLabel: UILabel = {
 		let label = UILabel(frame: .zero)
 		label.translatesAutoresizingMaskIntoConstraints = false
+		label.setContentHuggingPriority(.required, for: .vertical)
 
 		return label
 	}()
@@ -95,6 +101,7 @@ class PickerCell: UITableViewCell {
 	private lazy var detailLabel: UILabel = {
 		let label = UILabel(frame: .zero)
 		label.translatesAutoresizingMaskIntoConstraints = false
+		label.setContentHuggingPriority(.required, for: .vertical)
 
 		return label
 	}()
