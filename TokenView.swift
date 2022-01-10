@@ -21,7 +21,8 @@ class TokenView: UIView {
 	let tokenDataSource: TokenDataSource = .init()
 
 	var pickerDataSource: PickerDataSource? = nil
-	var pickerHeight: CGFloat = 400
+	var pickerHeightConstraint: NSLayoutConstraint!
+	var maxPickerHeight: CGFloat = 0
 
 	var items: [Pickable]? = nil {
 		didSet {
@@ -68,13 +69,22 @@ class TokenView: UIView {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	override func layoutSubviews() {
+		super.layoutSubviews()
+
+		let screenHeight = UIScreen.main.bounds.height
+		maxPickerHeight = screenHeight - self.frame.maxY
+	}
+
 	/// We override hitTest to allow touches on pickerView which is outside
 	/// parent's bounds
 	override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-		let subViewPoint = pickerView.convert(point, from: self)
+		if shouldShowPicker {
+			let subViewPoint = pickerView.convert(point, from: self)
 
-		if let view = pickerView.hitTest(subViewPoint, with: event) {
-			return view
+			if let view = pickerView.hitTest(subViewPoint, with: event) {
+				return view
+			}
 		}
 
 		return super.hitTest(point, with: event)
@@ -97,7 +107,7 @@ class TokenView: UIView {
 	}
 
 
-// MARK: Lazy views
+	// MARK: Lazy views
 
 	lazy var collectionView: TokenCollectionView = {
 		let layout = TokenFlowLayout()

@@ -107,7 +107,8 @@ fileprivate extension TokenView {
 			pickerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
 			pickerView.topAnchor.constraint(equalTo: bottomAnchor).isActive = true
 			pickerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-			pickerView.heightAnchor.constraint(equalToConstant: pickerHeight).isActive = true
+			pickerHeightConstraint = pickerView.heightAnchor.constraint(equalToConstant: 0)
+			pickerHeightConstraint.isActive = true
 		}
 
 		if pickerView.isHidden {
@@ -116,6 +117,8 @@ fileprivate extension TokenView {
 
 		pickerDataSource?.pattern = pattern
 		pickerView.reloadData()
+
+		pickerHeightConstraint.constant = min(pickerView.contentSize.height, maxPickerHeight)
 	}
 
 	/// Hides selection picker
