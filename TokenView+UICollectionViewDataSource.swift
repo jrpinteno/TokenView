@@ -90,6 +90,8 @@ fileprivate extension TokenView {
 		}
 	}
 
+
+	// MARK: Picker methods
 	/// Shows selection picker
 	///
 	/// - Parameter pattern: Search pattern as criteria to show elements in picker
@@ -117,8 +119,6 @@ fileprivate extension TokenView {
 
 		pickerDataSource?.pattern = pattern
 		pickerView.reloadData()
-
-		pickerHeightConstraint.constant = min(pickerView.contentSize.height, maxPickerHeight)
 	}
 
 	/// Hides selection picker
@@ -126,6 +126,8 @@ fileprivate extension TokenView {
 		pickerView.isHidden = true
 	}
 
+
+	// MARK: Tokens
 	/// Adds new token to the collectionView and DataSource
 	///
 	/// In case validation is required, a call to the delegate is made
@@ -190,8 +192,13 @@ fileprivate extension TokenView {
 }
 
 
-// MARK: UITableViewDelegate methods
-extension TokenView: UITableViewDelegate {
+// MARK: PickerTableViewDelegate methods
+extension TokenView: PickerTableViewDelegate {
+	func tableView(_ view: UITableView, didUpdateContentSize contentSize: CGSize) {
+		// TODO: Take into account safe area
+		pickerHeightConstraint.constant = min(contentSize.height, maxPickerHeight)
+	}
+
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if let item = pickerDataSource?.filteredItems[indexPath.item] {
 			if addToken(item.title) {

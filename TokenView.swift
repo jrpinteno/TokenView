@@ -72,8 +72,10 @@ class TokenView: UIView {
 	override func layoutSubviews() {
 		super.layoutSubviews()
 
-		let screenHeight = UIScreen.main.bounds.height
-		maxPickerHeight = screenHeight - self.frame.maxY
+		if shouldShowPicker {
+			let screenHeight = UIScreen.main.bounds.height
+			maxPickerHeight = screenHeight - self.frame.maxY
+		}
 	}
 
 	/// We override hitTest to allow touches on pickerView which is outside
@@ -117,8 +119,8 @@ class TokenView: UIView {
 		return view
 	}()
 
-	lazy var pickerView: UITableView = {
-		let view = UITableView(frame: .zero)
+	lazy var pickerView: PickerTableView = {
+		let view = PickerTableView(frame: .zero)
 		view.translatesAutoresizingMaskIntoConstraints = false
 		view.backgroundColor = .white
 		view.separatorInset = .zero
