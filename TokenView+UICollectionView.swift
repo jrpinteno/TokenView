@@ -37,9 +37,15 @@ extension TokenView: UICollectionViewDataSource {
 
 // MARK: UICollectionViewDelegate methods
 extension TokenView: UICollectionViewDelegate {
-	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+	func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+
 		if let cell = collectionView.cellForItem(at: indexPath) as? TokenCollectionViewCell {
-			_ = cell.becomeFirstResponder()
+			if cell.isSelected {
+				let item = tokenDataSource.token(at: indexPath)
+				delegate?.tokenView(self, didSelectToken: item.key)
+			} else {
+				_ = cell.becomeFirstResponder()
+			}
 		}
 	}
 }
