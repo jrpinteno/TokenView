@@ -33,11 +33,11 @@ class TokenCollectionViewCell: UICollectionViewCell {
 		tokenLabel.textColor = style.textColor
 		tokenLabel.font = style.font
 
-		addSubview(tokenLabel)
-		tokenLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: style.contentInset.left).isActive = true
-		tokenLabel.topAnchor.constraint(equalTo: topAnchor, constant: style.contentInset.top).isActive = true
-		tokenLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -style.contentInset.right).isActive = true
-		tokenLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -style.contentInset.bottom).isActive = true
+		contentView.addSubview(tokenLabel)
+		tokenLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: style.contentInset.left).isActive = true
+		tokenLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: style.contentInset.top).isActive = true
+		tokenLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -style.contentInset.right).isActive = true
+		tokenLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -style.contentInset.bottom).isActive = true
 	}
 
 
@@ -83,6 +83,7 @@ class TokenCollectionViewCell: UICollectionViewCell {
 }
 
 
+// MARK: UIKeyInput methods
 extension TokenCollectionViewCell: UIKeyInput {
 	var hasText: Bool {
 		return false

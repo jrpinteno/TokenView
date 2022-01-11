@@ -187,6 +187,8 @@ fileprivate extension TokenView {
 				_ = textFieldCell.becomeFirstResponder()
 				textFieldCell.text = replaceText
 			}
+
+			delegate?.tokenView(self, didRemoveToken: token)
 		}
 	}
 }

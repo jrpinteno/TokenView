@@ -48,11 +48,11 @@ class TextFieldCollectionViewCell: UICollectionViewCell {
 	}
 
 	private func setupView() {
-		addSubview(textField)
-		textField.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-		textField.topAnchor.constraint(equalTo: topAnchor).isActive = true
-		textField.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-		textField.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+		contentView.addSubview(textField)
+		textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+		textField.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+		textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+		textField.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
 		textField.delegate = self
 
 		textField.onEmptyDelete = { [weak self] in

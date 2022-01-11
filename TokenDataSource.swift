@@ -105,13 +105,13 @@ extension TokenDataSource: UICollectionViewDelegateFlowLayout {
 		// TODO: Use a ViewModel or something else to handle size that is more customizable
 		let identifier = identifier(forCellAtIndexPath: indexPath)
 		let font = UIFont.systemFont(ofSize: 18)
-		let horizontalPadding = 8.0
+		let horizontalPadding = 4.0
 		let verticalPadding = 8.0
 
 		switch identifier {
 			case PromptCollectionViewCell.reuseIdentifier:
 				let width = prompt?.size(withAttributes: [.font: font]).width ?? 0
-				return CGSize(width: width + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
+				return CGSize(width: ceil(width) + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
 
 			case TextFieldCollectionViewCell.reuseIdentifier:
 				// Here we return the minimum size for the TextField
@@ -121,7 +121,7 @@ extension TokenDataSource: UICollectionViewDelegateFlowLayout {
 			default:
 				let width = token(at: indexPath).size(withAttributes: [.font: font]).width
 
-				return CGSize(width: ceil(width) + 4 * 2, height: font.lineHeight + 2 * 2)
+				return CGSize(width: ceil(width) + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
 		}
 	}
 }
