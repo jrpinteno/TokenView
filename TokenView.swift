@@ -18,7 +18,7 @@ protocol TokenViewDelegate: AnyObject {
 class TokenView: UIView {
 	// MARK: Properties
 	weak var delegate: TokenViewDelegate? = nil
-	let tokenDataSource: TokenDataSource = .init()
+	let tokenDataSource = TokenDataSource<Token>()
 
 	var pickerDataSource: PickerDataSource? = nil
 	var pickerHeightConstraint: NSLayoutConstraint!
@@ -161,7 +161,8 @@ extension TokenView: UICollectionViewDelegateFlowLayout {
 
 				// Default currently is TokenCollectionViewCell
 			default:
-				let width = tokenDataSource.token(at: indexPath).size(withAttributes: [.font: font]).width
+				let token = tokenDataSource.token(at: indexPath)
+				let width = token.displayValue.size(withAttributes: [.font: font]).width
 
 				return CGSize(width: ceil(width) + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
 		}

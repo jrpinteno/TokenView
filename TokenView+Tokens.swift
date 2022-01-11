@@ -15,20 +15,8 @@ extension TokenView {
 	/// - Parameter text: Token to be added
 	/// - Returns: Whether the token has been successfully addded
 	func addToken(_ text: String) -> Bool {
-		defer {
-			if shouldShowPicker {
-				pickerDataSource?.pattern = ""
-				hidePicker()
-			}
-		}
-
 		guard !text.isEmpty else {
 			return false
-		}
-
-		// If token already exists no need to continue. TextField content is reset
-		guard !tokenDataSource.contains(token: text) else {
-			return true
 		}
 
 		// If token needs validation and it's not valid stop here
@@ -36,7 +24,30 @@ extension TokenView {
 			return false
 		}
 
-		self.tokenDataSource.append(token: text)
+		// TODO: delegate to search for item
+		let token = Token(key: text)
+
+		return addToken(token)
+	}
+
+	/// Adds new token to the collectionView and DataSource.
+	///
+	/// - Parameter token: Token to be added
+	/// - Returns:
+	func addToken(_ token: Token) -> Bool {
+		defer {
+			if shouldShowPicker {
+				pickerDataSource?.pattern = ""
+				hidePicker()
+			}
+		}
+
+		// If token already exists no need to continue. TextField content is reset
+		guard !tokenDataSource.contains(token: token) else {
+			return true
+		}
+
+		self.tokenDataSource.append(token: token)
 
 		let newIndexPath = IndexPath(item: self.tokenDataSource.textFieldIndexPath.item - 1, section: 0)
 
@@ -45,7 +56,7 @@ extension TokenView {
 			self.collectionView.scrollToItem(at: self.tokenDataSource.textFieldIndexPath, at: .top, animated: true)
 		}
 
-		delegate?.tokenView(self, didAddToken: text)
+		delegate?.tokenView(self, didAddToken: token.key)
 
 		return true
 	}
@@ -59,7 +70,7 @@ extension TokenView {
 	/// - Parameters:
 	///   - token: Token to be deleted
 	///   - replaceText: If present, the text will be shown in the textField
-	func removeToken(_ token: String, replaceText: String? = nil) {
+	func removeToken(_ token: Token, replaceText: String? = nil) {
 		if let removedIndexPath = tokenDataSource.indexPathFor(token: token) {
 			tokenDataSource.removeToken(at: removedIndexPath)
 
@@ -75,7 +86,7 @@ extension TokenView {
 				textFieldCell.text = replaceText
 			}
 
-			delegate?.tokenView(self, didRemoveToken: token)
+			delegate?.tokenView(self, didRemoveToken: token.key)
 		}
 	}
 }

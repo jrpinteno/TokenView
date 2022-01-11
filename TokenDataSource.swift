@@ -7,11 +7,11 @@
 
 import UIKit
 
-class TokenDataSource: NSObject {
+class TokenDataSource<Element>: NSObject where Element: Tokenizable {
 	// MARK: Properties
 
 	/// Array of tokens
-	private(set) var tokens: [String] = []
+	private(set) var tokens: [Element] = []
 
 	/// Tokens + TextField + (Prompt if should be shown)
 	var itemsCount: Int {
@@ -43,27 +43,15 @@ class TokenDataSource: NSObject {
 	///
 	/// - Parameter indexPath: Position at which the token should be
 	/// - Returns: Token which will be displayed
-	func token(at indexPath: IndexPath) -> String {
+	func token(at indexPath: IndexPath) -> Element {
 		return tokens[indexPath.item + (shouldShowPrompt ? -1 : 0)]
 	}
 
 	/// Appends a token to the token list
 	///
 	/// - Parameter token: Token to be appended
-	func append(token: String) {
+	func append(token: Element) {
 		tokens.append(token)
-	}
-
-	/// Returns a Boolean indicating whether token already exists in the array
-	///
-	/// - Parameter token: Token to check against
-	/// - Returns: `true` if the `token` is found; otherwise `false`.
-	func contains(token: String) -> Bool {
-		guard tokens.firstIndex(of: token) != nil else {
-			return false
-		}
-
-		return true
 	}
 
 	/// Removes the token at the given `IndexPath`
@@ -74,11 +62,23 @@ class TokenDataSource: NSObject {
 		tokens.remove(at: index)
 	}
 
+	/// Returns a Boolean indicating whether token already exists in the array
+	///
+	/// - Parameter token: Token to check against
+	/// - Returns: `true` if the `token` is found; otherwise `false`.
+	func contains(token: Element) -> Bool {
+		guard tokens.firstIndex(of: token) != nil else {
+			return false
+		}
+
+		return true
+	}
+
 	/// Finds `IndexPath` for a given token
 	///
 	/// - Parameter token: Token
 	/// - Returns: `IndexPath` for the first appearance of the given token
-	func indexPathFor(token: String) -> IndexPath? {
+	func indexPathFor(token: Element) -> IndexPath? {
 		guard let tokenIndex = tokens.firstIndex(of: token) else {
 			return nil
 		}

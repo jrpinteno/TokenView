@@ -54,7 +54,9 @@ extension TokenView: PickerTableViewDelegate {
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if let item = pickerDataSource?.filteredItems[indexPath.item] {
-			if addToken(item.title) {
+			let token = Token(key: item.key, displayValue: item.displayValue)
+
+			if addToken(token) {
 				if let textFieldCell = collectionView.cellForItem(at: tokenDataSource.textFieldIndexPath) as? TextFieldCollectionViewCell {
 
 					_ = textFieldCell.becomeFirstResponder()
@@ -70,7 +72,7 @@ extension TokenView: PickerTableViewDelegate {
 fileprivate extension TokenView {
 	func configureCell(_ tokenCell: TokenCollectionViewCell, at indexPath: IndexPath) {
 		let token = tokenDataSource.token(at: indexPath)
-		tokenCell.configure(with: token)
+		tokenCell.configure(with: token.displayValue)
 
 		tokenCell.willBeRemoved = { [weak self] in
 			guard let self = self else { return }
