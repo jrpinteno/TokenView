@@ -7,11 +7,13 @@
 
 import UIKit
 
-protocol TokenFlowLayoutDelegate: AnyObject {
+protocol TokenFlowLayoutDelegate: UICollectionViewDelegateFlowLayout {
 	/// Asks the delegate for the position of the TextField Cell
 	///
 	/// - Returns: IndexPath of TextField cell
 	func textFieldIndexPath(in collectionView: UICollectionView) -> IndexPath
+
+	func collectionView(_ collectionView: UICollectionView, didChangeHeight height: CGFloat)
 }
 
 

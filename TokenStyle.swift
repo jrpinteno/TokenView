@@ -26,10 +26,10 @@ struct DefaultStyle: TokenStyle {
 }
 
 struct DefaultPromptStyle: TokenStyle {
-	var backgroundColor: UIColor = .darkGray
+	var backgroundColor: UIColor = .clear
 	var cornerRadius: CGFloat = 0
 	var contentInset: UIEdgeInsets = .init(top: 2, left: 4, bottom: 2, right: 4)
 
-	var textColor: UIColor = .black
+	var textColor: UIColor = .lightGray
 	var font: UIFont = .systemFont(ofSize: 18.0)
 }

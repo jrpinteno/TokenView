@@ -21,7 +21,7 @@ class TokenDataSource: NSObject {
 	/// Position of TextField in the collectionView
 	var textFieldIndexPath: IndexPath {
 		// TextField is always at the end
-		return IndexPath(item: tokens.count + (shouldShowPrompt ? 1 : 0), section: 0)
+		return IndexPath(item: itemsCount - 1, section: 0)
 	}
 
 	/// IndexPath for prompt cell if it's shown
@@ -58,7 +58,7 @@ class TokenDataSource: NSObject {
 	///
 	/// - Parameter indexPath: Position of the token to be removed
 	func removeToken(at indexPath: IndexPath) {
-		let index = shouldShowPrompt ? indexPath.item - 1 : indexPath.item
+		let index = indexPath.item - (shouldShowPrompt ?  1 : 0)
 		tokens.remove(at: index)
 	}
 
@@ -79,6 +79,7 @@ class TokenDataSource: NSObject {
 
 
 	// MARK: Helper methods to get data according to item position
+
 	/// Identifier of reusable cell to be used at a given `IndexPath`
 	///
 	/// - Parameter indexPath: IndexPath of cell
@@ -94,44 +95,6 @@ class TokenDataSource: NSObject {
 
 			default:
 				return TokenCollectionViewCell.reuseIdentifier
-		}
-	}
-}
-
-
-// MARK: UICollectionViewDelegateFlowLayout methods
-extension TokenDataSource: UICollectionViewDelegateFlowLayout {
-	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		// TODO: Use a ViewModel or something else to handle size that is more customizable
-		let identifier = identifier(forCellAtIndexPath: indexPath)
-		let font = UIFont.systemFont(ofSize: 18)
-		let horizontalPadding = 4.0
-		let verticalPadding = 8.0
-
-		switch identifier {
-			case PromptCollectionViewCell.reuseIdentifier:
-				let width = prompt?.size(withAttributes: [.font: font]).width ?? 0
-				return CGSize(width: ceil(width) + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
-
-			case TextFieldCollectionViewCell.reuseIdentifier:
-				// Here we return the minimum size for the TextField
-				return CGSize(width: 60, height: font.lineHeight + verticalPadding * 2)
-
-			// Default currently is TokenCollectionViewCell
-			default:
-				let width = token(at: indexPath).size(withAttributes: [.font: font]).width
-
-				return CGSize(width: ceil(width) + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
-		}
-	}
-}
-
-
-// MARK: UICollectionViewDelegate methods
-extension TokenDataSource: UICollectionViewDelegate {
-	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		if let cell = collectionView.cellForItem(at: indexPath) as? TokenCollectionViewCell {
-			_ = cell.becomeFirstResponder()
 		}
 	}
 }

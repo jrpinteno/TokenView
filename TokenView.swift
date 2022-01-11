@@ -100,8 +100,8 @@ class TokenView: UIView {
 		collectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
 
 		collectionView.dataSource = self
-		collectionView.delegate = tokenDataSource
-		collectionView.isScrollEnabled = true
+		collectionView.delegate = self
+		collectionView.isScrollEnabled = false
 
 		if let layout = collectionView.collectionViewLayout as? TokenFlowLayout {
 			layout.delegate = self
@@ -133,8 +133,38 @@ class TokenView: UIView {
 
 // MARK: TokenFlowLayoutDelegate methods
 extension TokenView: TokenFlowLayoutDelegate {
+	func collectionView(_ collectionView: UICollectionView, didChangeHeight height: CGFloat) {}
+
 	func textFieldIndexPath(in collectionView: UICollectionView) -> IndexPath {
 		return tokenDataSource.textFieldIndexPath
+	}
+}
+
+
+// MARK: UICollectionViewDelegateFlowLayout methods
+extension TokenView: UICollectionViewDelegateFlowLayout {
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		// TODO: Use a ViewModel or something else to handle size that is more customizable
+		let identifier = tokenDataSource.identifier(forCellAtIndexPath: indexPath)
+		let font = UIFont.systemFont(ofSize: 18)
+		let horizontalPadding = 4.0
+		let verticalPadding = 8.0
+
+		switch identifier {
+			case PromptCollectionViewCell.reuseIdentifier:
+				let width = prompt?.size(withAttributes: [.font: font]).width ?? 0
+				return CGSize(width: ceil(width) + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
+
+			case TextFieldCollectionViewCell.reuseIdentifier:
+				// Here we return the minimum size for the TextField
+				return CGSize(width: 60, height: font.lineHeight + verticalPadding * 2)
+
+				// Default currently is TokenCollectionViewCell
+			default:
+				let width = tokenDataSource.token(at: indexPath).size(withAttributes: [.font: font]).width
+
+				return CGSize(width: ceil(width) + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
+		}
 	}
 }
 
