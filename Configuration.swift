@@ -15,7 +15,7 @@ enum Configuration {
 			var cornerRadius: CGFloat = 4.0
 
 			var contentInset: UIEdgeInsets = .init(top: 2, left: 4, bottom: 2, right: 4)
-			var font: UIFont = .systemFont(ofSize: 18.0)
+			var font: UIFont = .systemFont(ofSize: 14.0)
 		}
 
 		struct Prompt: TokenStyle {
@@ -24,9 +24,9 @@ enum Configuration {
 			var contentInset: UIEdgeInsets = .init(top: 2, left: 4, bottom: 2, right: 4)
 
 			var textColor: UIColor = .black
-			var font: UIFont = .systemFont(ofSize: 18.0)
+			var font: UIFont = .systemFont(ofSize: 14.0)
 		}
 
-		static var font: UIFont = .systemFont(ofSize: 18.0)
+		static var font: UIFont = .systemFont(ofSize: 14.0)
 	}
 }

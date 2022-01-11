@@ -94,6 +94,7 @@ class PickerCell: UITableViewCell {
 		let label = UILabel(frame: .zero)
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.setContentHuggingPriority(.required, for: .vertical)
+		label.font = .systemFont(ofSize: 14.0)
 
 		return label
 	}()
@@ -102,6 +103,8 @@ class PickerCell: UITableViewCell {
 		let label = UILabel(frame: .zero)
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.setContentHuggingPriority(.required, for: .vertical)
+		label.font = .systemFont(ofSize: 14.0)
+		label.textColor = .darkGray
 
 		return label
 	}()

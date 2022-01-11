@@ -22,14 +22,14 @@ struct DefaultStyle: TokenStyle {
 	var cornerRadius: CGFloat = 4.0
 
 	var contentInset: UIEdgeInsets = .init(top: 2, left: 4, bottom: 2, right: 4)
-	var font: UIFont = .systemFont(ofSize: 18.0)
+	var font: UIFont = .systemFont(ofSize: 14.0)
 }
 
 struct DefaultPromptStyle: TokenStyle {
 	var backgroundColor: UIColor = .clear
 	var cornerRadius: CGFloat = 0
-	var contentInset: UIEdgeInsets = .init(top: 2, left: 4, bottom: 2, right: 4)
+	var contentInset: UIEdgeInsets = .init(top: 2, left: 0, bottom: 2, right: 0)
 
 	var textColor: UIColor = .lightGray
-	var font: UIFont = .systemFont(ofSize: 18.0)
+	var font: UIFont = .systemFont(ofSize: 14.0)
 }

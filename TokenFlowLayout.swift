@@ -21,14 +21,12 @@ protocol TokenFlowLayoutDelegate: UICollectionViewDelegateFlowLayout {
 class TokenFlowLayout: UICollectionViewFlowLayout {
 	weak var delegate: TokenFlowLayoutDelegate? = nil
 
-	// TODO: Should be configurable
-	/// Space between cells in the collectionView
-	private let cellPadding: CGFloat = 8.0
-
 	override init() {
 		super.init()
 
 		sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+		minimumLineSpacing = 4.0
+		minimumInteritemSpacing = 4.0
 	}
 
 	required init?(coder: NSCoder) {
@@ -62,15 +60,19 @@ class TokenFlowLayout: UICollectionViewFlowLayout {
 			return nil
 		}
 
+		// TODO: directional insets
 		// First item only requires having the inset left
 		if indexPath.item == 0 {
 			layoutAttributes.frame.origin.x = sectionInset.left
 			return layoutAttributes
 		}
 
+		let width = collectionView.bounds.width
+		let availableWidth = width - minimumInteritemSpacing
+		print(availableWidth)
 		if let previousAttributes = layoutAttributesForItem(at: IndexPath(item: indexPath.item - 1, section: 0)),
 			layoutAttributes.frameInSameLine(as: previousAttributes) {
-			layoutAttributes.frame.origin.x = previousAttributes.frame.origin.x + previousAttributes.frame.width + cellPadding
+			layoutAttributes.frame.origin.x = previousAttributes.frame.origin.x + previousAttributes.frame.width + minimumInteritemSpacing
 		}
 
 		// If the cell to layout corresponds to the TextField, it will be stretched to fill collection width

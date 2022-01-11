@@ -146,14 +146,14 @@ extension TokenView: UICollectionViewDelegateFlowLayout {
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		// TODO: Use a ViewModel or something else to handle size that is more customizable
 		let identifier = tokenDataSource.identifier(forCellAtIndexPath: indexPath)
-		let font = UIFont.systemFont(ofSize: 18)
+		let font = UIFont.systemFont(ofSize: 14)
 		let horizontalPadding = 4.0
-		let verticalPadding = 8.0
+		let verticalPadding = 4.0
 
 		switch identifier {
 			case PromptCollectionViewCell.reuseIdentifier:
 				let width = prompt?.size(withAttributes: [.font: font]).width ?? 0
-				return CGSize(width: ceil(width) + horizontalPadding * 2, height: font.lineHeight + verticalPadding * 2)
+				return CGSize(width: ceil(width), height: font.lineHeight + verticalPadding * 2)
 
 			case TextFieldCollectionViewCell.reuseIdentifier:
 				// Here we return the minimum size for the TextField

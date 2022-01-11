@@ -59,15 +59,17 @@ extension TokenView: PickerTableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if let item = pickerDataSource?.filteredItems[indexPath.item] {
-			let token = Token(key: item.key, displayValue: item.displayValue)
+		guard let item = pickerDataSource?.filteredItems[indexPath.item] else {
+			return
+		}
 
-			if addToken(token) {
-				if let textFieldCell = collectionView.cellForItem(at: tokenDataSource.textFieldIndexPath) as? TextFieldCollectionViewCell {
+		let token = Token(key: item.key, displayValue: item.displayValue)
 
-					_ = textFieldCell.becomeFirstResponder()
-					textFieldCell.text = nil
-				}
+		if addToken(token) {
+			if let textFieldCell = collectionView.cellForItem(at: tokenDataSource.textFieldIndexPath) as? TextFieldCollectionViewCell {
+
+				_ = textFieldCell.becomeFirstResponder()
+				textFieldCell.text = nil
 			}
 		}
 	}

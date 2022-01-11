@@ -34,6 +34,7 @@ class PromptCollectionViewCell: UICollectionViewCell {
 
 		promptLabel.textColor = style.textColor
 		promptLabel.layer.cornerRadius = style.cornerRadius
+		promptLabel.font = style.font
 
 		contentView.addSubview(promptLabel)
 		promptLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: style.contentInset.left).isActive = true

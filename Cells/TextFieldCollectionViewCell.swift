@@ -72,6 +72,7 @@ class TextFieldCollectionViewCell: UICollectionViewCell {
 	private lazy var textField: EmptyAwareTextField = {
 		let field = EmptyAwareTextField()
 		field.translatesAutoresizingMaskIntoConstraints = false
+		field.font = .systemFont(ofSize: 14.0)
 		field.keyboardType = .emailAddress
 		field.autocorrectionType = .no
 		field.autocapitalizationType = .none
