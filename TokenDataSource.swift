@@ -54,6 +54,18 @@ class TokenDataSource: NSObject {
 		tokens.append(token)
 	}
 
+	/// Returns a Boolean indicating whether token already exists in the array
+	///
+	/// - Parameter token: Token to check against
+	/// - Returns: `true` if the `token` is found; otherwise `false`.
+	func contains(token: String) -> Bool {
+		guard tokens.firstIndex(of: token) != nil else {
+			return false
+		}
+
+		return true
+	}
+
 	/// Removes the token at the given `IndexPath`
 	///
 	/// - Parameter indexPath: Position of the token to be removed
@@ -67,14 +79,12 @@ class TokenDataSource: NSObject {
 	/// - Parameter token: Token
 	/// - Returns: `IndexPath` for the first appearance of the given token
 	func indexPathFor(token: String) -> IndexPath? {
-		for i in 0 ..< tokens.count {
-			if token == tokens[i] {
-				let index = shouldShowPrompt ? i + 1 : i
-				return IndexPath(item: index, section: 0)
-			}
+		guard let tokenIndex = tokens.firstIndex(of: token) else {
+			return nil
 		}
 
-		return nil
+		let index = tokenIndex + (shouldShowPrompt ? 1 : 0)
+		return IndexPath(item: index, section: 0)
 	}
 
 

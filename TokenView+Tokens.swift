@@ -15,8 +15,20 @@ extension TokenView {
 	/// - Parameter text: Token to be added
 	/// - Returns: Whether the token has been successfully addded
 	func addToken(_ text: String) -> Bool {
+		defer {
+			if shouldShowPicker {
+				pickerDataSource?.pattern = ""
+				hidePicker()
+			}
+		}
+
 		guard !text.isEmpty else {
 			return false
+		}
+
+		// If token already exists no need to continue. TextField content is reset
+		guard !tokenDataSource.contains(token: text) else {
+			return true
 		}
 
 		// If token needs validation and it's not valid stop here
@@ -31,11 +43,6 @@ extension TokenView {
 		UIView.performWithoutAnimation {
 			self.collectionView.insertItems(at: [newIndexPath])
 			self.collectionView.scrollToItem(at: self.tokenDataSource.textFieldIndexPath, at: .top, animated: true)
-		}
-
-		if shouldShowPicker {
-			pickerDataSource?.pattern = ""
-			hidePicker()
 		}
 
 		delegate?.tokenView(self, didAddToken: text)
