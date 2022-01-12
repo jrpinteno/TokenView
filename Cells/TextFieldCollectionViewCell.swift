@@ -1,6 +1,6 @@
 //
 //  TextFieldCollectionViewCell.swift
-//  TestContactPicker
+//  TokenView
 //
 //  Created by Xavi R. Pinteño on 23.11.2021.
 //
@@ -66,6 +66,13 @@ class TextFieldCollectionViewCell: UICollectionViewCell {
 		return textField.becomeFirstResponder()
 	}
 
+	/// Sets placeholder for textfield
+	///
+	/// - Parameter placeholder: Placeholder text
+	func setPlaceholder(_ placeholder: String?) {
+		textField.placeholder = placeholder
+	}
+
 
 	// MARK: Lazy views
 
@@ -76,7 +83,6 @@ class TextFieldCollectionViewCell: UICollectionViewCell {
 		field.keyboardType = .emailAddress
 		field.autocorrectionType = .no
 		field.autocapitalizationType = .none
-		field.placeholder = "Type here..."
 
 		return field
 	}()

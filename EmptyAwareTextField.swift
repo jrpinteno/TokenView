@@ -1,6 +1,6 @@
 //
 //  EmptyAwareTextField.swift
-//  TestContactPicker
+//  TokenView
 //
 //  Created by Xavi R. Pinteño on 24.11.2021.
 //

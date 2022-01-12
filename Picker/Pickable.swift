@@ -1,6 +1,6 @@
 //
 //  Pickable.swift
-//  TestContactPicker
+//  TokenView
 //
 //  Created by Xavi R. Pinteño on 22.12.2021.
 //

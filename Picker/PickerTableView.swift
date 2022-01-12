@@ -1,6 +1,6 @@
 //
 //  PickerTableView.swift
-//  TestContactPicker
+//  TokenView
 //
 //  Created by Xavi R. Pinteño on 10.1.2022.
 //

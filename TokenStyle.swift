@@ -1,6 +1,6 @@
 //
 //  TokenStyle.swift
-//  TestContactPicker
+//  TokenView
 //
 //  Created by Xavi R. Pinteño on 2.12.2021.
 //

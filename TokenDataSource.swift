@@ -1,6 +1,6 @@
 //
 //  TokenDataSource.swift
-//  TestContactPicker
+//  TokenView
 //
 //  Created by Xavi R. Pinteño on 24.11.2021.
 //
@@ -31,6 +31,9 @@ class TokenDataSource<Element>: NSObject where Element: Tokenizable {
 
 	/// Non-editable text to show before the line of tokens
 	var prompt: String?
+
+	/// Placeholder to show on the textfield
+	var placeholder: String?
 
 	/// Tells whether label with prompt is shown. It affects to calculation
 	/// regarding IndexPath of the different items

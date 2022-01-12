@@ -1,6 +1,6 @@
 //
 //  TokenView+UICollectionViewDataSource.swift
-//  TestContactPicker
+//  TokenView
 //
 //  Created by Xavi R. Pinteño on 13.12.2021.
 //
@@ -96,6 +96,8 @@ fileprivate extension TokenView {
 	}
 
 	func configureCell(_ textFieldCell: TextFieldCollectionViewCell) {
+		textFieldCell.setPlaceholder(placeholder)
+
 		textFieldCell.onTextReturn = { [weak self] text in
 			guard let self = self else {
 				return true

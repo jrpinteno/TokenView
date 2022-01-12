@@ -1,6 +1,6 @@
 //
 //  ReusableCell.swift
-//  TestContactPicker
+//  TokenView
 //
 //  Created by Xavi R. Pinteño on 10.12.2021.
 //

@@ -1,6 +1,6 @@
 //
 //  TokenView.swift
-//  TestContactPicker
+//  TokenView
 //
 //  Created by Xavi R. Pinteño on 24.11.2021.
 //
@@ -45,6 +45,12 @@ class TokenView: UIView {
 	var shouldShowPrompt: Bool = false {
 		didSet {
 			tokenDataSource.shouldShowPrompt = shouldShowPrompt
+		}
+	}
+
+	var placeholder: String? = nil {
+		didSet {
+			tokenDataSource.placeholder = placeholder
 		}
 	}
 

@@ -1,6 +1,6 @@
 //
 //  PromptCollectionViewCell.swift
-//  TestContactPicker
+//  TokenView
 //
 //  Created by Xavi R. Pinteño on 23.11.2021.
 //

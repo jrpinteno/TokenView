@@ -1,6 +1,6 @@
 //
 //  TokenFlowLayout.swift
-//  TestContactPicker
+//  TokenView
 //
 //  Created by Xavi R. Pinteño on 23.11.2021.
 //
@@ -67,9 +67,6 @@ class TokenFlowLayout: UICollectionViewFlowLayout {
 			return layoutAttributes
 		}
 
-		let width = collectionView.bounds.width
-		let availableWidth = width - minimumInteritemSpacing
-		print(availableWidth)
 		if let previousAttributes = layoutAttributesForItem(at: IndexPath(item: indexPath.item - 1, section: 0)),
 			layoutAttributes.frameInSameLine(as: previousAttributes) {
 			layoutAttributes.frame.origin.x = previousAttributes.frame.origin.x + previousAttributes.frame.width + minimumInteritemSpacing
