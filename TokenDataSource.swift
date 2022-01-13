@@ -57,6 +57,13 @@ class TokenDataSource<Element>: NSObject where Element: Tokenizable {
 		tokens.append(token)
 	}
 
+	/// Appends the elements of the sequence to token list
+	///
+	/// - Parameter tokens: Tokens to append
+	func append<S>(tokens: S) where S: Sequence, S.Element == Element {
+		self.tokens.append(contentsOf: tokens)
+	}
+
 	/// Removes the token at the given `IndexPath`
 	///
 	/// - Parameter indexPath: Position of the token to be removed

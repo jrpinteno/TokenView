@@ -102,7 +102,7 @@ class TokenView: UIView {
 		addSubview(collectionView)
 		collectionView.topAnchor.constraint(equalTo: topAnchor).isActive = true
 		collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-		collectionView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+		collectionView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor).isActive = true
 		collectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
 
 		collectionView.dataSource = self

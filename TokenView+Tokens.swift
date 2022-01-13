@@ -47,7 +47,7 @@ extension TokenView {
 			return true
 		}
 
-		self.tokenDataSource.append(token: token)
+		tokenDataSource.append(token: token)
 
 		let newIndexPath = IndexPath(item: self.tokenDataSource.textFieldIndexPath.item - 1, section: 0)
 
@@ -59,6 +59,16 @@ extension TokenView {
 		delegate?.tokenView(self, didAddToken: token.key)
 
 		return true
+	}
+
+	/// Preloads a number of tokens to show on the tokenView
+	///
+	/// These tokens are not validated and might contain duplicates
+	///
+	/// - Parameter tokens: Tokens to be added initially
+	func preloadTokens<S>(_ tokens: S) where S: Sequence, S.Element == Token {
+		// TODO: Should do validation and check for duplicity?
+		tokenDataSource.append(tokens: tokens)
 	}
 
 	/// Removes a token

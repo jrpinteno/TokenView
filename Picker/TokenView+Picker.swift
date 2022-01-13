@@ -23,10 +23,12 @@ extension TokenView {
 
 		if pickerView.window == nil {
 			addSubview(pickerView)
-			pickerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-			pickerView.topAnchor.constraint(equalTo: bottomAnchor).isActive = true
-			pickerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
 			pickerHeightConstraint = pickerView.heightAnchor.constraint(equalToConstant: 0)
+			pickerView.topAnchor.constraint(equalTo: collectionView.bottomAnchor).isActive = true
+			pickerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+			pickerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+			pickerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+
 			pickerHeightConstraint.isActive = true
 		}
 
