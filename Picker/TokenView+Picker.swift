@@ -22,18 +22,17 @@ extension TokenView {
 		// guard delegate.filterpattern...
 
 		if pickerView.window == nil {
-			addSubview(pickerView)
+			guard let window = window else {
+				return
+			}
+
+			window.addSubview(pickerView)
 			pickerHeightConstraint = pickerView.heightAnchor.constraint(equalToConstant: 0)
 			pickerView.topAnchor.constraint(equalTo: collectionView.bottomAnchor).isActive = true
 			pickerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
 			pickerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-			pickerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
 
 			pickerHeightConstraint.isActive = true
-		}
-
-		if pickerView.isHidden {
-			pickerView.isHidden = false
 		}
 
 		pickerDataSource?.pattern = pattern
@@ -42,6 +41,7 @@ extension TokenView {
 
 	/// Hides selection picker
 	func hidePicker() {
-		pickerView.isHidden = true
+		pickerView.removeFromSuperview()
+		pickerView.removeConstraint(pickerHeightConstraint)
 	}
 }
