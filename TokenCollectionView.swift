@@ -39,7 +39,7 @@ class TokenCollectionView: UICollectionView {
 	}
 
 	private func setupView() {
-		layer.borderColor = UIColor.black.cgColor
+		backgroundColor = .white
 
 		register(TextFieldCollectionViewCell.self, forCellWithReuseIdentifier: TextFieldCollectionViewCell.reuseIdentifier)
 		register(TokenCollectionViewCell.self, forCellWithReuseIdentifier: TokenCollectionViewCell.reuseIdentifier)
