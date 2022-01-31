@@ -7,9 +7,21 @@
 
 import UIKit
 
+protocol PickerDataSourceDelegate: AnyObject {
+	func dataSource(_ dataSource: PickerDataSource, patternNotFound pattern: String)
+}
+
 class PickerDataSource: NSObject, UITableViewDataSource {
 	private var items: [Pickable]
-	var pattern: String = ""
+	weak var delegate: PickerDataSourceDelegate? = nil
+
+	var pattern: String = "" {
+		didSet {
+			if filteredItems.isEmpty {
+				delegate?.dataSource(self, patternNotFound: pattern)
+			}
+		}
+	}
 
 	init(items: [Pickable]) {
 		self.items = items

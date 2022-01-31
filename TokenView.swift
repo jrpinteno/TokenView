@@ -28,6 +28,7 @@ class TokenView: UIView {
 		didSet {
 			if let items = items {
 				pickerDataSource = PickerDataSource(items: items)
+				pickerDataSource?.delegate = self
 				pickerView.dataSource = pickerDataSource
 				pickerView.delegate = self
 

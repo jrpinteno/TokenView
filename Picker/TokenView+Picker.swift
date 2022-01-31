@@ -35,13 +35,21 @@ extension TokenView {
 			pickerHeightConstraint.isActive = true
 		}
 
+		pickerView.isHidden = false
 		pickerDataSource?.pattern = pattern
 		pickerView.reloadData()
 	}
 
 	/// Hides selection picker
 	func hidePicker() {
-		pickerView.removeFromSuperview()
-		pickerView.removeConstraint(pickerHeightConstraint)
+		pickerView.isHidden = true
+	}
+}
+
+
+// TODO: PickerDataSourceDelegate methods
+extension TokenView: PickerDataSourceDelegate {
+	func dataSource(_ dataSource: PickerDataSource, patternNotFound pattern: String) {
+		hidePicker()
 	}
 }
