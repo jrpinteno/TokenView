@@ -49,11 +49,11 @@ extension TokenView {
 
 		tokenDataSource.append(token: token)
 
-		let newIndexPath = IndexPath(item: self.tokenDataSource.textFieldIndexPath.item - 1, section: 0)
+		let newIndexPath = IndexPath(item: self.tokenDataSource.lastIndexPath.item - 1, section: 0)
 
 		UIView.performWithoutAnimation {
 			self.collectionView.insertItems(at: [newIndexPath])
-			self.collectionView.scrollToItem(at: self.tokenDataSource.textFieldIndexPath, at: .top, animated: true)
+			self.collectionView.scrollToItem(at: self.tokenDataSource.lastIndexPath, at: .top, animated: true)
 		}
 
 		delegate?.tokenView(self, didAddToken: token.key)
@@ -90,7 +90,8 @@ extension TokenView {
 
 			// TODO: Considerations. When deleting token, should it go to the following tag, textfield or do nothing?
 			// Currently we make textfield first responder
-			if let textFieldCell = collectionView.cellForItem(at: tokenDataSource.textFieldIndexPath) as? TextFieldCollectionViewCell {
+			if let textFieldIndexPath = tokenDataSource.textFieldIndexPath,
+				let textFieldCell = collectionView.cellForItem(at: textFieldIndexPath) as? TextFieldCollectionViewCell {
 
 				_ = textFieldCell.becomeFirstResponder()
 				textFieldCell.text = replaceText

@@ -15,14 +15,21 @@ class TokenDataSource<Element>: NSObject where Element: Tokenizable {
 
 	/// Tokens + TextField + (Prompt if should be shown)
 	var itemsCount: Int {
-		return tokens.count + 1 + (shouldShowPrompt ? 1 : 0)
+		return tokens.count + (shouldShowTextField ? 1 : 0) + (shouldShowPrompt ? 1 : 0)
 	}
 
 	/// Position of TextField in the collectionView
-	var textFieldIndexPath: IndexPath {
+	var textFieldIndexPath: IndexPath? {
 		// TextField is always at the end
+		return shouldShowTextField ? IndexPath(item: itemsCount - 1, section: 0) : nil
+	}
+
+	var lastIndexPath: IndexPath {
 		return IndexPath(item: itemsCount - 1, section: 0)
 	}
+
+	///
+	var shouldShowTextField: Bool = true
 
 	/// IndexPath for prompt cell if it's shown
 	var promptIndexPath: IndexPath? {
@@ -110,7 +117,7 @@ class TokenDataSource<Element>: NSObject where Element: Tokenizable {
 			case (shouldShowPrompt ? 0 : nil):
 				return PromptCollectionViewCell.reuseIdentifier
 
-			case textFieldIndexPath.item:
+			case textFieldIndexPath?.item:
 				return TextFieldCollectionViewCell.reuseIdentifier
 
 			default:

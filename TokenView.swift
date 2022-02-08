@@ -57,6 +57,13 @@ class TokenView: UIView {
 
 	var shouldShowPicker: Bool = false
 
+	/// Allow entry of tags using textField
+	var isTagEntryAllowed: Bool = true {
+		didSet {
+			tokenDataSource.shouldShowTextField = isTagEntryAllowed
+		}
+	}
+
 	/// If not defined, return Configuration.Style.Token
 	var customTokenStyle: TokenStyle?
 
@@ -142,7 +149,7 @@ class TokenView: UIView {
 extension TokenView: TokenFlowLayoutDelegate {
 	func collectionView(_ collectionView: UICollectionView, didChangeHeight height: CGFloat) {}
 
-	func textFieldIndexPath(in collectionView: UICollectionView) -> IndexPath {
+	func textFieldIndexPath(in collectionView: UICollectionView) -> IndexPath? {
 		return tokenDataSource.textFieldIndexPath
 	}
 }

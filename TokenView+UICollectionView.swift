@@ -66,7 +66,8 @@ extension TokenView: PickerTableViewDelegate {
 		let token = Token(key: item.key, displayValue: item.displayValue)
 
 		if addToken(token) {
-			if let textFieldCell = collectionView.cellForItem(at: tokenDataSource.textFieldIndexPath) as? TextFieldCollectionViewCell {
+			if let textFieldIndexPath = tokenDataSource.textFieldIndexPath,
+				let textFieldCell = collectionView.cellForItem(at: textFieldIndexPath) as? TextFieldCollectionViewCell {
 
 				_ = textFieldCell.becomeFirstResponder()
 				textFieldCell.text = nil
@@ -110,7 +111,7 @@ fileprivate extension TokenView {
 			guard let self = self else { return }
 
 			if !self.tokenDataSource.tokens.isEmpty {
-				let previousIndexPath = IndexPath(item: self.tokenDataSource.textFieldIndexPath.item - 1, section: 0)
+				let previousIndexPath = IndexPath(item: self.tokenDataSource.lastIndexPath.item - 1, section: 0)
 				let cell = self.collectionView.cellForItem(at: previousIndexPath)
 				_ = cell?.becomeFirstResponder()
 			}
