@@ -21,7 +21,10 @@ class PickerCell: UITableViewCell {
 	}
 
 	func populateCell(with data: Pickable) {
-		titleLabel.text = data.title
+		if !data.title.isEmpty {
+			titleLabel.text = data.title
+			titleLabel.isHidden = false
+		}
 
 		if let subtitle = data.subtitle, !subtitle.isEmpty {
 			detailLabel.text = subtitle
@@ -34,8 +37,10 @@ class PickerCell: UITableViewCell {
 			photoView.heightAnchor.constraint(equalTo: verticalStack.heightAnchor).isActive = true
 			photoView.widthAnchor.constraint(equalTo: photoView.heightAnchor).isActive = true
 		}
-	}
 
+		let stackHeight = ceil(titleLabel.font.lineHeight + detailLabel.font.lineHeight)
+		verticalStack.heightAnchor.constraint(equalToConstant: stackHeight).isActive = true
+	}
 
 	private func setupView() {
 		contentView.addSubview(horizontalStack)
@@ -52,6 +57,15 @@ class PickerCell: UITableViewCell {
 		horizontalStack.addArrangedSubview(verticalStack)
 
 		photoView.isHidden = true
+		titleLabel.isHidden = true
+		detailLabel.isHidden = true
+	}
+
+	override func prepareForReuse() {
+		super.prepareForReuse()
+
+		photoView.isHidden = true
+		titleLabel.isHidden = true
 		detailLabel.isHidden = true
 	}
 
