@@ -41,7 +41,7 @@ class PickerDataSource: NSObject, UITableViewDataSource {
 		let cell = tableView.dequeueReusableCell(withIdentifier: PickerCell.reuseIdentifier, for: indexPath) as! PickerCell
 
 		let item = filteredItems[indexPath.item]
-		cell.populateCell(with: item)
+		cell.populateCell(with: item, pattern: pattern)
 
 		return cell
 	}

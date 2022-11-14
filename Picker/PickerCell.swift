@@ -20,15 +20,17 @@ class PickerCell: UITableViewCell {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	func populateCell(with data: Pickable) {
+	func populateCell(with data: Pickable, pattern: String) {
 		if !data.title.isEmpty {
 			titleLabel.text = data.title
 			titleLabel.isHidden = false
+			titleLabel.highlight(pattern)
 		}
 
 		if let subtitle = data.subtitle, !subtitle.isEmpty {
 			detailLabel.text = subtitle
 			detailLabel.isHidden = false
+			detailLabel.highlight(pattern)
 		}
 
 		if let image = data.image {
@@ -109,6 +111,7 @@ class PickerCell: UITableViewCell {
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.setContentHuggingPriority(.required, for: .vertical)
 		label.font = .systemFont(ofSize: 14.0)
+		label.textColor = .darkGray
 
 		return label
 	}()
@@ -118,7 +121,7 @@ class PickerCell: UITableViewCell {
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.setContentHuggingPriority(.required, for: .vertical)
 		label.font = .systemFont(ofSize: 14.0)
-		label.textColor = .darkGray
+		label.textColor = .gray
 
 		return label
 	}()
