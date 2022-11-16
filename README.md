@@ -3,6 +3,18 @@
 View container based on `UICollectionView` used to display tokens. It also allows adding new ones through `UITextField` entry and possibility to attach a picker selection view.
 
 
+## Installation
+
+### CocoaPods
+
+TokenView is available through [CocoaPods](https://cocoapods.org). To install
+it, simply add the following line to your Podfile:
+
+```ruby
+pod 'TokenView'
+```
+
+
 ## **Known issues**
 - [x] Picker doesn't disappear when token is added through text change (delimiters)
 
@@ -32,3 +44,13 @@ View container based on `UICollectionView` used to display tokens. It also allow
 - [ ] Toggle showing picker elements which have been already added 
 
 - [x] Show preloaded tokens
+
+
+## Author
+
+Xavi R. Pinteño, xavi@jrpinteno.me
+
+
+## License
+
+TokenView is available under the MIT license. See the [LICENSE](https://github.com/jrpinteno/TokenView/blob/main/LICENSE) file for more info.
