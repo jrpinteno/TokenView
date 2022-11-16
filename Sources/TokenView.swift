@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol TokenViewDelegate: AnyObject {
+public protocol TokenViewDelegate: AnyObject {
 	func tokenView(_ view: TokenView, isTokenValid token: String) -> Bool
 	func tokenView(_ view: TokenView, didSelectToken token: String)
 	func tokenView(_ view: TokenView, didAddToken token: String)
@@ -15,16 +15,16 @@ protocol TokenViewDelegate: AnyObject {
 }
 
 
-class TokenView: UIView {
+public class TokenView: UIView {
 	// MARK: Properties
-	weak var delegate: TokenViewDelegate? = nil
+	public weak var delegate: TokenViewDelegate? = nil
 	let tokenDataSource = TokenDataSource<Token>()
 
 	var pickerDataSource: PickerDataSource? = nil
 	var pickerHeightConstraint: NSLayoutConstraint!
 	var maxPickerHeight: CGFloat = 0
 
-	var items: [Pickable]? = nil {
+	public var items: [Pickable]? = nil {
 		didSet {
 			if let items = items {
 				pickerDataSource = PickerDataSource(items: items)
@@ -37,28 +37,28 @@ class TokenView: UIView {
 		}
 	}
 
-	var prompt: String? = nil {
+	public var prompt: String? = nil {
 		didSet {
 			tokenDataSource.prompt = prompt
 		}
 	}
 
-	var shouldShowPrompt: Bool = false {
+	public var shouldShowPrompt: Bool = false {
 		didSet {
 			tokenDataSource.shouldShowPrompt = shouldShowPrompt
 		}
 	}
 
-	var placeholder: String? = nil {
+	public var placeholder: String? = nil {
 		didSet {
 			tokenDataSource.placeholder = placeholder
 		}
 	}
 
-	var shouldShowPicker: Bool = false
+	public var shouldShowPicker: Bool = false
 
 	/// Allow entry of tags using textField
-	var isTagEntryAllowed: Bool = true {
+	public var isTagEntryAllowed: Bool = true {
 		didSet {
 			tokenDataSource.shouldShowTextField = isTagEntryAllowed
 		}
@@ -68,12 +68,12 @@ class TokenView: UIView {
 	var customTokenStyle: TokenStyle?
 
 	/// Delimiters to check on new text entry for token generation
-	var delimiters: [String]? = nil
+	public var delimiters: [String]? = nil
 
 	/// Should tokens be validated before being added
-	var validationRequired: Bool = false
+	public var validationRequired: Bool = false
 
-	override init(frame: CGRect) {
+	public override init(frame: CGRect) {
 		super.init(frame: frame)
 
 		setupViews()
@@ -83,7 +83,7 @@ class TokenView: UIView {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override func layoutSubviews() {
+	public override func layoutSubviews() {
 		super.layoutSubviews()
 
 		if shouldShowPicker {
@@ -94,7 +94,7 @@ class TokenView: UIView {
 
 	/// We override hitTest to allow touches on pickerView which is outside
 	/// parent's bounds
-	override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+	public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
 		if shouldShowPicker {
 			let subViewPoint = pickerView.convert(point, from: self)
 
@@ -157,7 +157,7 @@ extension TokenView: TokenFlowLayoutDelegate {
 
 // MARK: UICollectionViewDelegateFlowLayout methods
 extension TokenView: UICollectionViewDelegateFlowLayout {
-	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+	public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		// TODO: Use a ViewModel or something else to handle size that is more customizable
 		let identifier = tokenDataSource.identifier(forCellAtIndexPath: indexPath)
 		let font = UIFont.systemFont(ofSize: 14)
@@ -186,17 +186,17 @@ extension TokenView: UICollectionViewDelegateFlowLayout {
 
 // MARK: UIPopoverPresentationControllerDelegate methods
 extension TokenView: UIPopoverPresentationControllerDelegate {
-	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+	public func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
 		popoverPresentationController.sourceView = self
 		popoverPresentationController.sourceRect = self.bounds
 		popoverPresentationController.canOverlapSourceViewRect = false
 	}
 
-	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+	public func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return .none
 	}
 
-	func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+	public func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
 		return .none
 	}
 }

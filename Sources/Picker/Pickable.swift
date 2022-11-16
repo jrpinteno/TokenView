@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol Pickable {
+public protocol Pickable {
 	var title: String { get }
 	var subtitle: String? { get }
 	var image: UIImage? { get }

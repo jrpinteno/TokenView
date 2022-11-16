@@ -9,11 +9,11 @@ import UIKit
 
 // MARK: UICollectionViewDataSource methods
 extension TokenView: UICollectionViewDataSource {
-	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+	public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return tokenDataSource.itemsCount
 	}
 
-	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+	public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: tokenDataSource.identifier(forCellAtIndexPath: indexPath), for: indexPath)
 
 		switch cell {
@@ -37,7 +37,7 @@ extension TokenView: UICollectionViewDataSource {
 
 // MARK: UICollectionViewDelegate methods
 extension TokenView: UICollectionViewDelegate {
-	func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+	public func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
 
 		if let cell = collectionView.cellForItem(at: indexPath) as? TokenCollectionViewCell {
 			if cell.isSelected {
@@ -58,7 +58,7 @@ extension TokenView: PickerTableViewDelegate {
 		pickerHeightConstraint.constant = min(contentSize.height, maxPickerHeight)
 	}
 
-	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard let item = pickerDataSource?.filteredItems[indexPath.item] else {
 			return
 		}
